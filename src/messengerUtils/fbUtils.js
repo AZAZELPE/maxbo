@@ -1,7 +1,7 @@
 const jsUtils = require('../jsUtils/jsUtils');
 const request = require('request');
 
-const PAGE_ACCESS_TOKEN = "EAAJ9y8vys9ABAG4oZCWM1RPm4BU9XLibaq3mZAYmIXy1I5aXfN0vmjx9ZCX5upOLZB515NbefZAOBLrZCGawFnOjmqxlZB8c3ZCZCB0ltZB7ZC8kylwk4tsZCDxdxQd97DxwPCZCn0X955ZAkkxUbj6vXjkApMlK6awY8A5ZBWbmpiRi4B58SvxcWkKr70v";
+const PAGE_ACCESS_TOKEN = "EAAJ9y8vys9ABABj6s7VBtaMv6DjY47xaQQPqUFUCgbulTBPaZCK0mSOD8afgIFgedGA4Me4KZCcy031DvAkjsq4A44QwXAIlRjpfWh6F5upuT9EMLj0XVoXXNS31xZCsh0ZAR3vqOPKB5mzsfjCan4csq7IGsIL8GMvElga6ZBktn5ZAMcPZBOK";
 
 //Envia un mensaje a FB, ingresar id del usuario a enviar y el mensaje
 let sendMessage2FB = async (sender_psid, message) => {
@@ -31,6 +31,45 @@ let sendMessage2FB = async (sender_psid, message) => {
       }
     });
   });
+
+}
+
+//Tipos de Respuestas (Plantillas que nos da FB)
+let buildGenericTemplate = () => {
+
+  return {
+    "attachment":{
+      "type":"template",
+      "payload":{
+        "template_type":"generic",
+        "elements":[
+           {
+            "title":"Welcome!",
+            "image_url":"https://res.cloudinary.com/practicaldev/image/fetch/s--ciMqVBs6--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://raw.githubusercontent.com/adnanrahic/cdn/master/trigger-lambda-sns/sls-aws-lambda-sns3.png",
+            "subtitle":"We have the right hat for everyone.",
+            "default_action": {
+              "type": "web_url",
+              "url": "https://petersfancybrownhats.com/view?item=103",
+              "messenger_extensions": false,
+              "webview_height_ratio": "tall",
+              "fallback_url": "https://petersfancybrownhats.com/"
+            },
+            "buttons":[
+              {
+                "type":"web_url",
+                "url":"https://petersfancybrownhats.com",
+                "title":"View Website"
+              },{
+                "type":"postback",
+                "title":"Start Chatting",
+                "payload":"DEVELOPER_DEFINED_PAYLOAD"
+              }              
+            ]      
+          }
+        ]
+      }
+    }
+  }
 
 }
 
