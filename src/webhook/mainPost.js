@@ -7,11 +7,57 @@ const fbUtils = require('../messengerUtils/fbUtils')
 let handleMessage = async (sender_psid, received_message) => {
   let message;
 
-  if (received_message.text) { 
-    message = `You sent the message: "${received_message.text}". Now send me an image!`;   
+  if (received_message.text === 'CATALOGO') { 
+    let buttons = [fbUtils.buildSelectButton('select')];
+    
+    let elements = [];
+
+    elements.push(fbUtils.buildElementWithImage("Vino Tinto","Lo mejor de los vinos tintos para ti",buttons,"https://heredadaduna.com/wp-content/uploads/2017/02/vino_tinto_rioja.jpg"));
+    elements.push(fbUtils.buildElementWithImage("Vino Blanco","Lo mejor de los vinos blancos para ti",buttons,"https://www.vinetur.com/imagenes/2017/junio/6/vino_blanco.jpg"));
+    elements.push(fbUtils.buildElementWithImage("Vino Rosado","Lo mejor de los vinos rosados para ti",buttons,"https://vinosdiferentes.com/wp-content/uploads/2016/06/como-elaborar-vino-rosado.png"));
+    elements.push(fbUtils.buildElementWithImage("Champagne","El mejor champagne para ti",buttons,"https://static.vinepair.com/wp-content/uploads/2017/11/vintage-internal.jpg"));
+
+    message = fbUtils.buildListTemplate('large',elements);
+
   }
 
-  await fbUtils.sendMessage2FB(sender_psid,message);
+  if (received_message.text === 'telefono') { 
+    let buttons = [fbUtils.buildSelectButton('select')];
+    
+    message = {"text": "Here is a quick reply!",
+    "quick_replies":[
+      {
+        "content_type":"user_phone_number"
+      }
+    ]};
+
+  }
+  
+  if (received_message.text === 'email') { 
+    let buttons = [fbUtils.buildSelectButton('select')];
+    
+    message = {"text": "Here is a quick reply!",
+    "quick_replies":[
+      {
+        "content_type":"user_email"
+      }
+    ]};
+
+  }
+
+  if (received_message.text === 'gps') { 
+    let buttons = [fbUtils.buildSelectButton('select')];
+    
+    message = {"text": "Here is a quick reply!",
+    "quick_replies":[
+      {
+        "content_type":"location"
+      }
+    ]};
+
+  }
+
+  await fbUtils.sendMessage2FB(sender_psid, message);
 
   return "";
 };

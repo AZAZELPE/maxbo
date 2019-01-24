@@ -10,10 +10,10 @@ let sendMessage2FB = async (sender_psid, message) => {
     "recipient": {
       "id": sender_psid
     },
-    "message": {
-      "text": message
-    }
+    "message": message
   }
+
+  jsUtils.consoleLog('INFO',request_body);
 
   return await new Promise((resolve, reject) => {
     request({
@@ -34,43 +34,73 @@ let sendMessage2FB = async (sender_psid, message) => {
 
 }
 
-//Tipos de Respuestas (Plantillas que nos da FB)
-let buildGenericTemplate = () => {
 
+let buildPostbackButton = (title, payload) => {
+  return {      
+    "type":"postback",
+    "title":title,
+    "payload":payload
+  }
+}
+
+let buildSelectButton = (payload) => {
+  return {
+    "type":"postback",
+    "title":"Seleccionar",
+    "payload":payload
+  }
+}
+
+let buildElement = (title, subtitle, buttons) => {
+
+  return {
+    "title":title,
+    "subtitle":subtitle,
+    "buttons": buttons
+  }
+}
+
+let buildElementWithImage = (title, subtitle, buttons, imageUrl) => {
+  return {
+    "title":title,
+    "image_url":imageUrl,
+    "subtitle":subtitle,
+    "buttons": buttons
+  }
+}
+
+let buildGenericTemplate = (elements) => {
   return {
     "attachment":{
       "type":"template",
       "payload":{
         "template_type":"generic",
-        "elements":[
-           {
-            "title":"Welcome!",
-            "image_url":"https://res.cloudinary.com/practicaldev/image/fetch/s--ciMqVBs6--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://raw.githubusercontent.com/adnanrahic/cdn/master/trigger-lambda-sns/sls-aws-lambda-sns3.png",
-            "subtitle":"We have the right hat for everyone.",
-            "default_action": {
-              "type": "web_url",
-              "url": "https://petersfancybrownhats.com/view?item=103",
-              "messenger_extensions": false,
-              "webview_height_ratio": "tall",
-              "fallback_url": "https://petersfancybrownhats.com/"
-            },
-            "buttons":[
-              {
-                "type":"web_url",
-                "url":"https://petersfancybrownhats.com",
-                "title":"View Website"
-              },{
-                "type":"postback",
-                "title":"Start Chatting",
-                "payload":"DEVELOPER_DEFINED_PAYLOAD"
-              }              
-            ]      
-          }
-        ]
+        "elements": elements
       }
     }
   }
-
 }
 
+//style : compact or large
+let buildListTemplate = (style, elements) => {
+  return {
+    "attachment":{
+      "type":"template",
+      "payload":{
+        "template_type":"list",
+        "top_element_style": style,
+        "elements": elements
+      }
+    }
+  }
+}
+
+
+
 module.exports.sendMessage2FB = sendMessage2FB;
+module.exports.buildPostbackButton = buildPostbackButton;
+module.exports.buildElement = buildElement;
+module.exports.buildElementWithImage = buildElementWithImage;
+module.exports.buildGenericTemplate = buildGenericTemplate;
+module.exports.buildSelectButton = buildSelectButton;
+module.exports.buildListTemplate = buildListTemplate;
