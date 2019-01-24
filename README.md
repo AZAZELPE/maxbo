@@ -37,8 +37,10 @@ Con ese ID no dependo si aplique mas filtros o si estoy en otro punto de la hist
 
 Para los puntos en los cuales son 2 o mas filtros se puede generar un estandar:
 
-TipoSolicitud_id1_id2_id3_id4...  
+`TipoSolicitud_id1_id2_id3_id4...`
+
 donde TipoSolicitud puede ser
+
 | TipoSolicitud | descripcion | 
 | -- | -- |
 | FIL | Filter - para filtrado |
