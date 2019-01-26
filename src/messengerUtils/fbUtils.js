@@ -3,6 +3,32 @@ const request = require('request');
 
 const PAGE_ACCESS_TOKEN = "EAAJ9y8vys9ABABj6s7VBtaMv6DjY47xaQQPqUFUCgbulTBPaZCK0mSOD8afgIFgedGA4Me4KZCcy031DvAkjsq4A44QwXAIlRjpfWh6F5upuT9EMLj0XVoXXNS31xZCsh0ZAR3vqOPKB5mzsfjCan4csq7IGsIL8GMvElga6ZBktn5ZAMcPZBOK";
 
+//Recoge los datos de la persona usando un GET a la url definida por google
+let getProfileFromFB = async (sender_psid) => {
+
+  return await new Promise((resolve, reject) => {
+    request({
+      "uri": `https://graph.facebook.com/${sender_psid}`,
+      "qs": { 
+        "fields": "first_name,last_name,profile_pic",
+        "access_token": PAGE_ACCESS_TOKEN 
+      },
+      "method": "GET"
+    }, (err, res, body) => {
+      if (!err) {
+        let result = JSON.parse(res.body);
+        jsUtils.consoleLog('INFO',`read profile from ${sender_psid}: ${result.first_name} ${result.last_name}!`);
+        resolve(result);
+      } else {
+        jsUtils.consoleLog('ERR','Unable to send message:' + err);
+        reject(err);
+      }
+    });
+  });
+
+};
+
+
 //Envia un mensaje a FB, ingresar id del usuario a enviar y el mensaje
 let sendMessage2FB = async (sender_psid, message) => {
 
@@ -32,7 +58,7 @@ let sendMessage2FB = async (sender_psid, message) => {
     });
   });
 
-}
+};
 
 
 let buildPostbackButton = (title, payload) => {
@@ -41,7 +67,7 @@ let buildPostbackButton = (title, payload) => {
     "title":title,
     "payload":payload
   }
-}
+};
 
 let buildSelectButton = (payload) => {
   return {
@@ -49,7 +75,7 @@ let buildSelectButton = (payload) => {
     "title":"Seleccionar",
     "payload":payload
   }
-}
+};
 
 let buildElement = (title, subtitle, buttons) => {
 
@@ -58,7 +84,7 @@ let buildElement = (title, subtitle, buttons) => {
     "subtitle":subtitle,
     "buttons": buttons
   }
-}
+};
 
 let buildElementWithImage = (title, subtitle, buttons, imageUrl) => {
   return {
@@ -67,7 +93,7 @@ let buildElementWithImage = (title, subtitle, buttons, imageUrl) => {
     "subtitle":subtitle,
     "buttons": buttons
   }
-}
+};
 
 let buildGenericTemplate = (elements) => {
   return {
@@ -79,7 +105,7 @@ let buildGenericTemplate = (elements) => {
       }
     }
   }
-}
+};
 
 //style : compact or large
 let buildListTemplate = (style, elements) => {
@@ -93,13 +119,13 @@ let buildListTemplate = (style, elements) => {
       }
     }
   }
-}
+};
 
 let buildTextTemplate = (text) => {
   return {
     "text":text
   }
-}
+};
 
 let buildQuickResponseDefined = (type, text) => {
   return {"text": text,
@@ -108,8 +134,9 @@ let buildQuickResponseDefined = (type, text) => {
       "content_type":type
     }
   ]};
-}
+};
 
+module.exports.getProfileFromFB = getProfileFromFB;
 module.exports.sendMessage2FB = sendMessage2FB;
 module.exports.buildPostbackButton = buildPostbackButton;
 module.exports.buildElement = buildElement;

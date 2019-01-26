@@ -4,6 +4,7 @@ module.exports.TYPE_FILTER_INTENT = 'FILTER_INTENT';
 module.exports.TYPE_TEXT_INTENT = 'TEXT_INTENT';
 module.exports.TYPE_PRODUCT_INTENT = 'PRODUCT_INTENT';
 
+module.exports.INTENT_EMPEZAR = 'EMPEZAR';
 module.exports.INTENT_VER_CATALOGO = 'CATALOGUE';
 module.exports.INTENT_VER_TIPO_PAGOS = 'INFO_PAYMETHODS';
 module.exports.INTENT_VER_CARRITO = 'CART_VIEW';
@@ -23,6 +24,10 @@ module.exports.QUICKRESPONSE_EMAIL = 'user_email';
 //Aqui se describe el intent y se ingresan los sinonimos que pueden tener para
 //llamar a un intent en particular
 module.exports.INTENTS = [
+  {"name": "EMPEZAR",
+    "values": [
+    {"postback":"EMPEZAR"}
+  ]},
   {"name": "CATALOGUE",
     "values": [
     {"postback":"CATALOGUE"},

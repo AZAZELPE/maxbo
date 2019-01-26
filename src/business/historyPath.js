@@ -6,7 +6,7 @@ const jsUtils = require('../jsUtils/jsUtils');
 // EvaluatePath: Evalua el camino a seguir segun lo ingresado.
 // type: 2 tipos: a)Message, b)Postback
 // intent: texto
-let evaluatePath = async (type, intent) => {
+let evaluatePath = async (type, intent,sender_psid) => {
 
   jsUtils.consoleLog('INFO',intent.toString().toUpperCase());
   jsUtils.consoleLog('INFO',type);
@@ -14,7 +14,7 @@ let evaluatePath = async (type, intent) => {
   let tipoIntent = await evaluateIntent(type, intent.toString().toUpperCase());
   
   jsUtils.consoleLog('INFO',tipoIntent);
-  let response = await generateRespond(tipoIntent);
+  let response = await generateRespond(tipoIntent,sender_psid);
   
   jsUtils.consoleLog('INFO',response);
 
@@ -71,7 +71,7 @@ let evaluateIntent = async (type, intent) => {
   return c.INTENT_DEFAULT_RESPONSE;
 };
 
-let generateRespond = async (tipoIntent) => {
+let generateRespond = async (tipoIntent,sender_psid) => {
 
   if(tipoIntent.tipo == c.TYPE_FILTER_INTENT) {
 
@@ -84,6 +84,9 @@ let generateRespond = async (tipoIntent) => {
   } else if(tipoIntent.tipo == c.TYPE_TEXT_INTENT) {
 
     switch(tipoIntent.data) {
+      case c.INTENT_EMPEZAR:
+        return await response.intentEmpezar(sender_psid);
+      
       case c.INTENT_VER_CATALOGO:
         return await response.intentVerCatalogo();
 

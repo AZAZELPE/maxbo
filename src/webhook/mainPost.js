@@ -36,10 +36,10 @@ module.exports.main = async (event, context) => {
       // Check if the event is a message or postback and
       // pass the event to the appropriate handler function
       if (webhook_event.message) {
-        messages = await bussines.evaluatePath(c.TYPE_MESSAGE, webhook_event.message.text);
+        messages = await bussines.evaluatePath(c.TYPE_MESSAGE, webhook_event.message.text,sender_psid);
       } 
       else if (webhook_event.postback) {
-        messages = await bussines.evaluatePath(c.TYPE_POSTBACK, webhook_event.postback.payload);
+        messages = await bussines.evaluatePath(c.TYPE_POSTBACK, webhook_event.postback.payload,sender_psid);
       }
 
       for(let message of messages) {

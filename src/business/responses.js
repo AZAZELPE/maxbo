@@ -3,6 +3,18 @@ const dynamo = require('../awsUtils/dynamoUtils')
 const fbUtils = require('../messengerUtils/fbUtils');
 const jsUtils = require('../jsUtils/jsUtils');
 
+let intentEmpezar = async (sender_psid) => {
+  let profile = await fbUtils.getProfileFromFB(sender_psid);
+  jsUtils.consoleLog('INFO',profile);
+
+  let messages = [];
+  messages.push(fbUtils.buildTextTemplate(`Hola ${profile.first_name}, muchas gracias por contar con nosotros!`));
+  messages.push(fbUtils.buildTextTemplate(`Somos una empresa que vende vinos y estamos para atenderte`));
+  messages.push(fbUtils.buildTextTemplate(`En la parte de abajo puedes encontrar nuestro menu de opciones.\nRecomendamos poner "Ver Catalogo" para comenzar!`));
+
+  return messages;
+}
+
 let intentVerCatalogo = async () => {
 
   let tiposVino = await dynamo.lookUpFilters();    
@@ -146,6 +158,7 @@ let intentEditProfileInfo = async () => {
   return intentDefaultResponse();
 }
 
+module.exports.intentEmpezar = intentEmpezar;
 module.exports.intentVerCatalogo = intentVerCatalogo;
 module.exports.intentVerTipoPagos = intentVerTipoPagos;
 module.exports.intentVerCarrito = intentVerCarrito;
