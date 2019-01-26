@@ -54,11 +54,11 @@ functions:
           method: post
     package:
       include: # Specify the directories and files which should be included in the deployment package for this specific function.
-        - ./src/webhook/mainPost.js
-        - ./src/messengerUtils/node_modules/**
-        - ./src/jsUtils/jsUtils.js
-        - ./src/messengerUtils/fbUtils.js
-        - ./src/business/foolingAround.js
+        - src/webhook/mainPost.js
+        - src/messengerUtils/node_modules/**
+        - src/jsUtils/jsUtils.js
+        - src/messengerUtils/fbUtils.js
+        - src/business/foolingAround.js
   mainGet:
     handler: src/webhook/mainGet.main
     events:
@@ -67,8 +67,16 @@ functions:
           method: get
     package:
       include: # Specify the directories and files which should be included in the deployment package for this specific function.
-        - ./src/webhook/mainGet.js
-        - ./src/jsUtils/jsUtils.js
+        - src/webhook/mainGet.js
+        - src/jsUtils/jsUtils.js
+
+  data2dynamo:
+    handler: src/business/testing/data2dynamo.main
+    package:
+      include: # Specify the directories and files which should be included in the deployment package for this specific function.
+        - src/business/testing/data2dynamo.js
+        - src/business/testing/data.js
+        - src/jsUtils/jsUtils.js
   
 resources:
   #DynamoDB
