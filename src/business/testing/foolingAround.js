@@ -1,4 +1,4 @@
-const fbUtils = require('../messengerUtils/fbUtils');
+const fbUtils = require('../../messengerUtils/fbUtils');
 
 let pruebas = (sender_psid, received_message) => {
     

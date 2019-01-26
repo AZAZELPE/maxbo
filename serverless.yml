@@ -58,7 +58,11 @@ functions:
         - src/messengerUtils/node_modules/**
         - src/jsUtils/jsUtils.js
         - src/messengerUtils/fbUtils.js
-        - src/business/foolingAround.js
+        - src/business/testing/foolingAround.js
+        - src/business/constants.js
+        - src/business/historyPath.js
+        - src/business/responses.js
+        - src/awsUtils/dynamoUtils.js
   mainGet:
     handler: src/webhook/mainGet.main
     events:

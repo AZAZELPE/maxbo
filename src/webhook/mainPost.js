@@ -2,10 +2,11 @@
 
 const jsUtils = require('../jsUtils/jsUtils');
 const fbUtils = require('../messengerUtils/fbUtils');
-const testing = require('../business/foolingAround');
+//const testing = require('../business/testing/foolingAround');
+const bussines = require('../business/historyPath');
+const c = require('../business/constants');
 
-
-let handleMessage = async (sender_psid, received_message) => {
+/*let handleMessage = async (sender_psid, received_message) => {
   let message;
 
   message = testing.pruebas(sender_psid, received_message);
@@ -13,7 +14,7 @@ let handleMessage = async (sender_psid, received_message) => {
   await fbUtils.sendMessage2FB(sender_psid, message);
 
   return "";
-};
+};*/
 
 
 module.exports.main = async (event, context) => {
@@ -30,15 +31,18 @@ module.exports.main = async (event, context) => {
 
       let webhook_event = entry.messaging[0];
       let sender_psid = webhook_event.sender.id;
+      let message = "";
 
       // Check if the event is a message or postback and
       // pass the event to the appropriate handler function
       if (webhook_event.message) {
-        await handleMessage(sender_psid, webhook_event.message);
+        message = await bussines.evaluatePath(c.TYPE_MESSAGE, webhook_event.message.text);
       } 
-      //else if (webhook_event.postback) {
-      //  handlePostback(sender_psid, webhook_event.postback);
-      //}
+      else if (webhook_event.postback) {
+        message = await bussines.evaluatePath(c.TYPE_POSTBACK, webhook_event.postback.payload);
+      }
+
+      await fbUtils.sendMessage2FB(sender_psid, message);
   
     }
 
