@@ -95,6 +95,12 @@ let buildListTemplate = (style, elements) => {
   }
 }
 
+let buildTextTemplate = (text) => {
+  return {
+    "text":text
+  }
+}
+
 
 
 module.exports.sendMessage2FB = sendMessage2FB;
@@ -104,3 +110,4 @@ module.exports.buildElementWithImage = buildElementWithImage;
 module.exports.buildGenericTemplate = buildGenericTemplate;
 module.exports.buildSelectButton = buildSelectButton;
 module.exports.buildListTemplate = buildListTemplate;
+module.exports.buildTextTemplate = buildTextTemplate;

@@ -11,8 +11,11 @@ let intentVerCatalogo = async () => {
   jsUtils.consoleLog('INFO', tiposVino);
 
   for(let tipoVino of tiposVino) {
-    let button = [fbUtils.buildSelectButton(`PBI_${tipoVino.id}`)];
-    elements.push(fbUtils.buildElementWithImage(tipoVino.nombre.toString().toUpperCase(),"",button,tipoVino.imageURL));
+    let button = [fbUtils.buildSelectButton(`PBI_FIL_${tipoVino.id}`)];
+    let titulo = tipoVino.nombre.toString().toUpperCase();
+    let subtitulo = "";
+    let imageURL = tipoVino.imageURL;
+    elements.push(fbUtils.buildElementWithImage(titulo,subtitulo,button,imageURL));
   }
 
   let message = fbUtils.buildGenericTemplate(elements);
@@ -42,7 +45,7 @@ let intentDefaultResponse = () => {
   return {"text":"No tenemos ello"};
 };
 
-let intentByDBResponse = async (filter) => {
+let intentByFilterResponse = async (filter) => {
 
   let products = await dynamo.lookUpByFilter(filter);
   let elements = [];
@@ -50,8 +53,13 @@ let intentByDBResponse = async (filter) => {
   jsUtils.consoleLog('INFO', products);
 
   for(let product of products) {
-    let button = [fbUtils.buildSelectButton(`PBI_${product.id}`)];
-    elements.push(fbUtils.buildElementWithImage(product.nombre.toString().toUpperCase(),"",button,product.imageURL));
+    let buttons = []
+    buttons.push(fbUtils.buildPostbackButton("Ver Detalle",`PBI_PRO_${product.id}-${c.PRODUCT_ACTION_DETALLE}`));
+    buttons.push(fbUtils.buildPostbackButton("Agregar a mi carrito",`PBI_PRO_${product.id}-${c.PRODUCT_ACTION_AGREGAR}`));
+    let titulo = product.nombre.toString().toUpperCase();
+    let subtitulo = `${product.tipo} - ${product.bodega} - ${product.moneda}${product.precioMinorista}`;
+    let imageURL = product.imageURL;
+    elements.push(fbUtils.buildElementWithImage(titulo,subtitulo,buttons,imageURL));
   }
 
   let message = fbUtils.buildGenericTemplate(elements);
@@ -59,6 +67,21 @@ let intentByDBResponse = async (filter) => {
   jsUtils.consoleLog('INFO', message);
 
   return message;
+
+}
+
+let intentByProductResponse = async (product, action) => {
+
+  if(action == c.PRODUCT_ACTION_DETALLE) {
+
+    let message = `${product.nombre} - ${product.tipo} - ${product.bodega} - ${product.moneda}${product.precioMinorista}`;
+    return fbUtils.buildTextTemplate(message);
+
+  } else if (action == c.PRODUCT_ACTION_AGREGAR) {
+
+    let message = `Agregado al carrito - ${product.nombre}`;
+    return fbUtils.buildTextTemplate(message);
+  }
 
 
 }
@@ -69,4 +92,5 @@ module.exports.intentVerTipoPagos = intentVerTipoPagos;
 module.exports.intentVerCarrito = intentVerCarrito;
 module.exports.intentComprarCarrito = intentComprarCarrito;
 module.exports.intentDefaultResponse = intentDefaultResponse;
-module.exports.intentByDBResponse = intentByDBResponse;
+module.exports.intentByFilterResponse = intentByFilterResponse;
+module.exports.intentByProductResponse = intentByProductResponse;

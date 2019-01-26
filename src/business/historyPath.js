@@ -16,6 +16,8 @@ let evaluatePath = async (type, intent) => {
   jsUtils.consoleLog('INFO',tipoIntent);
   let response = await generateRespond(tipoIntent);
   
+  jsUtils.consoleLog('INFO',response);
+
   return response;
 }
 
@@ -25,15 +27,32 @@ let evaluateIntent = async (type, intent) => {
   
   //Primero se evalua si es un intent q esta en db por tipo de posback en boton
   //si no lo es se recorre todos los intents conocidos
-  if(intent.toString().split("_")[0] == 'PBI' && type == c.TYPE_POSTBACK)  {// PBI = POSTBACK ITEM 
+  if(intent.toString().split("_")[0] == 'PBI' && type == c.TYPE_POSTBACK)  {// PBI = POSTBACK ITEM -- FIL = filtro -- PRO = producto
     
-    let result = await dynamo.lookUpPostbackItem(intent.toString().split("_")[1]);
-    if(result.Item) {
-      return {"tipo":c.TYPE_DB_INTENT,
-              "data": result.Item}
+    if(intent.toString().split("_")[1] == 'FIL') { // Si se selecciona un filtro
+      
+      let result = await dynamo.lookUpPostbackItem(intent.toString().split("_")[2]);
+      if(result.Item) {
+        return {"tipo":c.TYPE_FILTER_INTENT,
+                "data": result.Item}
+      }
+
+    } else if(intent.toString().split("_")[1] == 'PRO') { // Si se selecciona un producto 
+
+      let productoCompuesto = intent.toString().split("_")[2];
+      let product = productoCompuesto.toString().split("-")[0];
+      let action = productoCompuesto.toString().split("-")[1];
+
+      let result = await dynamo.lookUpPostbackItem(product);
+      if(result.Item) {
+        return {"tipo":c.TYPE_PRODUCT_INTENT,
+                "data": result.Item,
+                "action": action}
+      }
+
     }
 
-  } else {
+  } else { //Verifica en la lista de intents a ver si es un comando valido
     for(let dbintent of c.INTENTS) {
       for(let value of dbintent.values) {
 
@@ -54,9 +73,13 @@ let evaluateIntent = async (type, intent) => {
 
 let generateRespond = async (tipoIntent) => {
 
-  if(tipoIntent.tipo == c.TYPE_DB_INTENT) {
+  if(tipoIntent.tipo == c.TYPE_FILTER_INTENT) {
 
-    return await response.intentByDBResponse(tipoIntent.data);
+    return await response.intentByFilterResponse(tipoIntent.data);
+
+  } else if(tipoIntent.tipo == c.TYPE_PRODUCT_INTENT) {
+  
+    return await response.intentByProductResponse(tipoIntent.data,tipoIntent.action)
 
   } else if(tipoIntent.tipo == c.TYPE_TEXT_INTENT) {
 
