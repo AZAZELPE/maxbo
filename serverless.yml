@@ -23,7 +23,8 @@ provider:
   # These environment variables are made available to our functions
   # under process.env.
   environment:
-    tableName: ${self:custom.tableName}
+    productsTableName: ${self:custom.productsTableName}
+    customersTableName: ${self:custom.customersTableName}
 
   iamRoleStatements:
     - Effect: Allow
@@ -88,7 +89,8 @@ resources:
 
 custom:
   stage: ${opt:stage, self:provider.stage}
-  tableName:  ${self:service}-${self:custom.stage}-wineProducts
+  productsTableName:  ${self:service}-${self:custom.stage}-abvinosProducts
+  customersTableName:  ${self:service}-${self:custom.stage}-abvinosCustomers
   tableThroughputs:
     prod: 5
     default: 1

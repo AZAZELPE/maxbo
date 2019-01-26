@@ -1,7 +1,8 @@
 const jsUtils = require('../jsUtils/jsUtils');
 const AWS = require('aws-sdk');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
-const tableName = process.env.tableName;
+const productsTableName = process.env.productsTableName;
+const customersTableName = process.env.customersTableName;
 
 let call = (action, params) => {
   return dynamoDb[action](params).promise();
@@ -13,7 +14,7 @@ let lookUpPostbackItem = async (postbackIntent) => {
     Key: {
       "id": postbackIntent
     },
-    TableName: tableName
+    TableName: productsTableName
   };
 
   return await call("get",params);
@@ -25,7 +26,7 @@ let lookUpFilters = async () => {
   let data;
   
   const params = {
-    TableName: tableName
+    TableName: productsTableName
   };
 
   data = await call("scan",params);
@@ -39,7 +40,7 @@ let lookUpByFilter = async (filter) => {
   let data;
   
   const params = {
-    TableName: tableName
+    TableName: productsTableName
   };
 
   data = await call("scan",params);

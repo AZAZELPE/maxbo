@@ -2,6 +2,7 @@ const AWS = require('aws-sdk');
 const catalogo = require("./data");
 const jsUtils = require('../../jsUtils/jsUtils');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const productsTableName= process.env.productsTableName;
 
 module.exports.main = async (event, context) => {
   
@@ -17,7 +18,7 @@ module.exports.main = async (event, context) => {
 
   for(const item of data) {
     params = {
-      TableName: process.env.tableName,
+      TableName: productsTableName,
       Item: item
     };
 

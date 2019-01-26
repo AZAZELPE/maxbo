@@ -2,7 +2,21 @@ Resources:
     productsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.tableName}
+        TableName: ${self:custom.productsTableName}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: ${self:custom.tableThroughput}
+          WriteCapacityUnits: ${self:custom.tableThroughput}
+    
+    customersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.customersTableName}
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
