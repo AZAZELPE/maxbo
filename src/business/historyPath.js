@@ -25,9 +25,9 @@ let evaluateIntent = async (type, intent) => {
   
   //Primero se evalua si es un intent q esta en db por tipo de posback en boton
   //si no lo es se recorre todos los intents conocidos
-  if(intent.split("_")[0] == 'PBI' && type.TYPE_POSTBACK)  {// PBI = POSTBACK ITEM 
+  if(intent.toString().split("_")[0] == 'PBI' && type == c.TYPE_POSTBACK)  {// PBI = POSTBACK ITEM 
     
-    let result = await dynamo.lookUpPostbackItem(intent.split("_")[1]);
+    let result = await dynamo.lookUpPostbackItem(intent.toString().split("_")[1]);
     if(result.Item) {
       return {"tipo":c.TYPE_DB_INTENT,
               "data": result.Item}
@@ -56,6 +56,7 @@ let generateRespond = async (tipoIntent) => {
 
   if(tipoIntent.tipo == c.TYPE_DB_INTENT) {
 
+    return await response.intentByDBResponse(tipoIntent.data);
 
   } else if(tipoIntent.tipo == c.TYPE_TEXT_INTENT) {
 
