@@ -96,6 +96,12 @@ let generateRespond = async (tipoIntent) => {
       case c.INTENT_COMPRAR_CARRITO:
         return await response.intentComprarCarrito();
 
+      case c.INTENT_COMPRAR_CARRITO_CONFIRMED:
+        return await response.intentComprarCarritoConfirmado();
+
+      case c.INTENT_INFOPROFILE_EDIT:
+        return await response.intentEditProfileInfo();
+
       default:
         return await response.intentDefaultResponse();
     }

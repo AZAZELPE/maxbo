@@ -31,19 +31,21 @@ module.exports.main = async (event, context) => {
 
       let webhook_event = entry.messaging[0];
       let sender_psid = webhook_event.sender.id;
-      let message = "";
+      let messages;
 
       // Check if the event is a message or postback and
       // pass the event to the appropriate handler function
       if (webhook_event.message) {
-        message = await bussines.evaluatePath(c.TYPE_MESSAGE, webhook_event.message.text);
+        messages = await bussines.evaluatePath(c.TYPE_MESSAGE, webhook_event.message.text);
       } 
       else if (webhook_event.postback) {
-        message = await bussines.evaluatePath(c.TYPE_POSTBACK, webhook_event.postback.payload);
+        messages = await bussines.evaluatePath(c.TYPE_POSTBACK, webhook_event.postback.payload);
       }
 
-      await fbUtils.sendMessage2FB(sender_psid, message);
-  
+      for(let message of messages) {
+        await fbUtils.sendMessage2FB(sender_psid, message);
+      }
+      
     }
 
     response = {

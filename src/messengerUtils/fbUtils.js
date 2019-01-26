@@ -101,7 +101,14 @@ let buildTextTemplate = (text) => {
   }
 }
 
-
+let buildQuickResponseDefined = (type, text) => {
+  return {"text": text,
+  "quick_replies":[
+    {
+      "content_type":type
+    }
+  ]};
+}
 
 module.exports.sendMessage2FB = sendMessage2FB;
 module.exports.buildPostbackButton = buildPostbackButton;
@@ -111,3 +118,4 @@ module.exports.buildGenericTemplate = buildGenericTemplate;
 module.exports.buildSelectButton = buildSelectButton;
 module.exports.buildListTemplate = buildListTemplate;
 module.exports.buildTextTemplate = buildTextTemplate;
+module.exports.buildQuickResponseDefined = buildQuickResponseDefined;
