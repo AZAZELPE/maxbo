@@ -136,6 +136,18 @@ let buildQuickResponseDefined = (type, text) => {
   ]};
 };
 
+let buildQuickResponse = (text, buttonTitle, payload) => {
+  return {"text": text,
+  "quick_replies":[
+    {
+      "content_type":"text",
+      "title": buttonTitle,
+      "payload": payload
+    }
+  ]};
+};
+
+
 module.exports.getProfileFromFB = getProfileFromFB;
 module.exports.sendMessage2FB = sendMessage2FB;
 module.exports.buildPostbackButton = buildPostbackButton;
@@ -146,3 +158,4 @@ module.exports.buildSelectButton = buildSelectButton;
 module.exports.buildListTemplate = buildListTemplate;
 module.exports.buildTextTemplate = buildTextTemplate;
 module.exports.buildQuickResponseDefined = buildQuickResponseDefined;
+module.exports.buildQuickResponse = buildQuickResponse;

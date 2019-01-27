@@ -79,7 +79,7 @@ let generateRespond = async (tipoIntent,sender_psid) => {
 
   } else if(tipoIntent.tipo == c.TYPE_PRODUCT_INTENT) {
   
-    return await response.intentByProductResponse(tipoIntent.data,tipoIntent.action)
+    return await response.intentByProductResponse(tipoIntent.data,tipoIntent.action,sender_psid)
 
   } else if(tipoIntent.tipo == c.TYPE_TEXT_INTENT) {
 
@@ -94,13 +94,13 @@ let generateRespond = async (tipoIntent,sender_psid) => {
         return await response.intentVerTipoPagos();
 
       case c.INTENT_VER_CARRITO:
-        return await response.intentVerCarrito();
+        return await response.intentVerCarrito(undefined,sender_psid);
 
       case c.INTENT_COMPRAR_CARRITO:
-        return await response.intentComprarCarrito();
+        return await response.intentComprarCarrito(sender_psid);
 
       case c.INTENT_COMPRAR_CARRITO_CONFIRMED:
-        return await response.intentComprarCarritoConfirmado();
+        return await response.intentComprarCarritoConfirmado(sender_psid);
 
       case c.INTENT_INFOPROFILE_EDIT:
         return await response.intentEditProfileInfo();

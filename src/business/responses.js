@@ -5,12 +5,27 @@ const jsUtils = require('../jsUtils/jsUtils');
 
 let intentEmpezar = async (sender_psid) => {
   let profile = await fbUtils.getProfileFromFB(sender_psid);
-  jsUtils.consoleLog('INFO',profile);
+
+  const newCustomer = {
+    "id": profile.id,
+    "firstName": profile.first_name,
+    "lastName": profile.last_name,
+    "profileImage": profile.profile_pic,
+    "direccion": 'Av Alameda Sur 917 - Chorrillos',
+    "cellphone": '988663919',
+    "signIn": new Date().getTime(),
+    "cart": [],
+    "orders": []
+  }
+
+  await dynamo.saveCustomer(newCustomer);
+  jsUtils.consoleLog('INFO',newCustomer);
 
   let messages = [];
   messages.push(fbUtils.buildTextTemplate(`Hola ${profile.first_name}, muchas gracias por contar con nosotros!`));
   messages.push(fbUtils.buildTextTemplate(`Somos una empresa que vende vinos y estamos para atenderte`));
-  messages.push(fbUtils.buildTextTemplate(`En la parte de abajo puedes encontrar nuestro menu de opciones.\nRecomendamos poner "Ver Catalogo" para comenzar!`));
+  messages.push(fbUtils.buildTextTemplate(`En la parte de abajo puedes encontrar nuestro menu de opciones.`));
+  messages.push(fbUtils.buildQuickResponse(`Recomendamos poner "Ver Catalogo" para comenzar!`,"Ver Catalogo",c.INTENT_VER_CATALOGO));
 
   return messages;
 }
@@ -46,17 +61,29 @@ let intentVerTipoPagos = () => {
   return messages;
 };
 
-let intentVerCarrito = () => {
+let intentVerCarrito = async (cart, sender_psid) => {
+
+  if(cart === undefined) {
+    cart = await dynamo.getCartFromCustomer(sender_psid);
+  }
 
   let elements = [];
   
   //jsUtils.consoleLog('INFO', product);
+  let subs = "";
+  let total = 0;
+
+  for(let p of cart) {
+    total += p.cantidad*p.precioMinorista;
+    subs += `${p.cantidad} ${p.nombre} - ${p.tipo} (${p.moneda}${p.precioMinorista})\n`;
+  }
 
   let buttons = []
   buttons.push(fbUtils.buildPostbackButton("Separar",c.INTENT_COMPRAR_CARRITO));
   buttons.push(fbUtils.buildPostbackButton("Seguir viendo",c.INTENT_VER_CATALOGO));
-  let titulo = "Carrito";
-  let subtitulo = `productos`;
+
+  let titulo = `Carrito - TOTAL: S/${total}`+"";
+  let subtitulo = subs;
   let imageURL = "https://s3.amazonaws.com/maxbo-aws-image/wineCart.png";
   elements.push(fbUtils.buildElementWithImage(titulo,subtitulo,buttons,imageURL));
 
@@ -68,20 +95,20 @@ let intentVerCarrito = () => {
   return messages;
 };
 
-let intentComprarCarrito = () => {
+let intentComprarCarrito = async (sender_psid) => {
 
-  let direccion = 'Av Alameda Sur 917 - Chorrillos';
-  let telefono = '988663919';
+  let customer = dynamo
   
   let elements = [];
   
   //jsUtils.consoleLog('INFO', product);
+  let datosContacto = await dynamo.getContactDataFromCustomer(sender_psid);
 
   let buttons = []
   buttons.push(fbUtils.buildPostbackButton("Editar Info",c.INTENT_INFOPROFILE_EDIT));
   buttons.push(fbUtils.buildPostbackButton("¡CONFIRMADO!",c.INTENT_COMPRAR_CARRITO_CONFIRMED));
   let titulo = "Datos de contacto y entrega";
-  let subtitulo = `Dirección: ${direccion}\nTeléfono: ${telefono}`;
+  let subtitulo = `Dirección: ${datosContacto.address}\nTeléfono: ${datosContacto.cellphone}`;
   let imageURL = "https://s3.amazonaws.com/maxbo-aws-image/contactInfo.png";
   elements.push(fbUtils.buildElementWithImage(titulo,subtitulo,buttons,imageURL));
 
@@ -95,10 +122,13 @@ let intentComprarCarrito = () => {
 
 };
 
-let intentComprarCarritoConfirmado = () => {
+let intentComprarCarritoConfirmado = async (customerId) => {
+
+  let orderNumber = Math.floor(Math.random()*1000);
+  await dynamo.saveNewOrderFromCart(customerId,orderNumber);
 
   let messages = [];
-  messages.push(fbUtils.buildTextTemplate("Listo! Su pedido esta separado.\n\nEn breve un encargado se comunicará con usted para el envio. Gracias!"));
+  messages.push(fbUtils.buildTextTemplate("Listo! Su pedido esta separado!.\n\nEn breve un encargado se comunicará con usted para el envio. Gracias!"));
   return messages;
 }
 
@@ -135,7 +165,7 @@ let intentByFilterResponse = async (filter) => {
 
 }
 
-let intentByProductResponse = async (product, action) => {
+let intentByProductResponse = async (product, action, sender_psid) => {
 
   if(action == c.PRODUCT_ACTION_DETALLE) {
 
@@ -144,9 +174,11 @@ let intentByProductResponse = async (product, action) => {
 
   } else if (action == c.PRODUCT_ACTION_AGREGAR) {
 
-    //let subtitulo = `1 ${product.nombre} - ${product.tipo} (${product.moneda}${product.precioMinorista})`;
+    product['cantidad'] = 1;
+    let cart = await dynamo.saveProducto2Cart(product,sender_psid);
+    jsUtils.consoleLog('INFO',cart);
 
-    return intentVerCarrito();
+    return intentVerCarrito(cart);
 
   }
 
