@@ -12,7 +12,37 @@ module.exports.catalogoTest = [
       "umbralMayorista":6,
       "tipoData":"producto",
       "ubicacion":"VINOS DE BURDEOS - FRANCIA",
-      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/chateau-grand-jean-min.jpeg"
+      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/chateau-grand-jean-min.jpg"
+    },
+    {
+      "id":"1011",
+      "tipo":"Tinto",
+      "nombre":"Le Tertre du Sarpe Saint Emilion",
+      "bodega":"Magnaudeix",
+      "cepas":"100% Merlot",
+      "anio":2011,
+      "moneda":"S/",
+      "precioMinorista":95,
+      "precioMayorista":93,
+      "umbralMayorista":6,
+      "tipoData":"producto",
+      "ubicacion":"VINOS DE BURDEOS - FRANCIA",
+      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/copy_from_25235_to_1050440911_10504407_chateau_le_castelot_saint_emilion_grand_c.jpg"
+    },
+    {
+      "id":"1012",
+      "tipo":"Tinto",
+      "nombre":"Pontificis",
+      "bodega":"Badet Clément",
+      "cepas":"Grenache, Syrah, Mourvedre",
+      "anio":2014,
+      "moneda":"S/",
+      "precioMinorista":49,
+      "precioMayorista":46,
+      "umbralMayorista":6,
+      "tipoData":"producto",
+      "ubicacion":"VINOS DE BURDEOS - FRANCIA",
+      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/Pontificis+Red+Wine-774x735.jpg"
     },
     {
       "id":"1002",
@@ -27,22 +57,37 @@ module.exports.catalogoTest = [
       "umbralMayorista":6,
       "tipoData":"producto",
       "ubicacion":"VINOS DE BURDEOS - FRANCIA",
-      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/chateau-grand-jean-min.jpeg"
+      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/chateau-grandjean-bordeaux-entre-deux-mers.jpg"
     },
     {
       "id":"1003",
-      "tipo":"Tinto",
-      "nombre":"Le Tertre du Sarpe Saint Emilion",
-      "bodega":"Magnaudeix",
-      "cepas":"100% Merlot",
-      "anio":2011,
+      "tipo":"Blanco",
+      "nombre":"Pontificis blanco",
+      "bodega":"Badet Clément",
+      "cepas":"Chardonnay, Viognier",
+      "anio":2015,
       "moneda":"S/",
-      "precioMinorista":95,
-      "precioMayorista":89,
+      "precioMinorista":49,
+      "precioMayorista":46,
       "umbralMayorista":6,
       "tipoData":"producto",
       "ubicacion":"VINOS DE BURDEOS - FRANCIA",
-      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/chateau-grand-jean-min.jpeg"
+      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/descarga.jpeg"
+    },
+    {
+      "id":"1009",
+      "tipo":"Blanco",
+      "nombre":"Corazón Loco",
+      "bodega":"Bodega Iniesta",
+      "cepas":"60% Sauvignon blanc 40% Verdejo",
+      "anio":2015,
+      "moneda":"S/",
+      "precioMinorista":45,
+      "precioMayorista":42,
+      "umbralMayorista":6,
+      "tipoData":"producto",
+      "ubicacion":"VINOS DE BURDEOS - FRANCIA",
+      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/cl-tinto-prod.jpg"
     },
     {
       "id":"1004",
@@ -57,7 +102,7 @@ module.exports.catalogoTest = [
       "umbralMayorista":6,
       "tipoData":"producto",
       "ubicacion":"VINOS DE OTRAS ZONAS DE FRANCIA",
-      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/chateau-grand-jean-min.jpeg"
+      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/image.jpeg"
     },
     {
       "id":"1005",
@@ -72,34 +117,6 @@ module.exports.catalogoTest = [
       "umbralMayorista":6,
       "tipoData":"producto",
       "ubicacion":"VINOS DE BURDEOS - FRANCIA",
-      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/chateau-grand-jean-min.jpeg"
-    },
-    {
-      "id":"2001",
-      "nombre":"tinto",
-      "tipoData":"filtro",
-      "apunta":"tipo",
-      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/vino_tinto_rioja.jpg"
-    },
-    {
-      "id":"2002",
-      "nombre":"blanco",
-      "tipoData":"filtro",
-      "apunta":"tipo",
-      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/vino_blanco.jpg"
-    },
-    {
-      "id":"2003",
-      "nombre":"rosado",
-      "tipoData":"filtro",
-      "apunta":"tipo",
-      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/rosado.png"
-    },
-    {
-      "id":"2004",
-      "nombre":"espumante",
-      "tipoData":"filtro",
-      "apunta":"tipo",
-      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/vintage-internal.jpg"
+      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/corazon-loco-rosado_1.jpg"
     }
   ]
