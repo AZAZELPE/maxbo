@@ -90,6 +90,7 @@ functions:
       - http:
           path: api/contactInfo/{id}
           method: get
+          cors: true
     package:
       include:
         - src/api/getContactInfo.js
@@ -102,6 +103,7 @@ functions:
       - http:
           path: api/contactInfo/{id}
           method: post
+          cors: true
     package:
       include:
         - src/api/saveContactInfo.js
@@ -114,6 +116,7 @@ functions:
       - http:
           path: api/product/{id}
           method: get
+          cors: true
     package:
       include:
         - src/api/getProduct.js

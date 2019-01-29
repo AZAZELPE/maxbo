@@ -12,6 +12,13 @@ module.exports.main = async (event, context) => {
   
   let response = {
     statusCode: 200,
+    "headers": {
+      "X-Requested-With": '*',
+      "Access-Control-Allow-Headers": 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-requested-with',
+      "Access-Control-Allow-Origin": '*',
+      "Access-Control-Allow-Methods": 'POST,GET,OPTIONS',
+      "Access-Control-Allow-Credentials" : true
+    },
     body: JSON.stringify(mybody)
   }
 
