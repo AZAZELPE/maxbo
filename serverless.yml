@@ -83,6 +83,43 @@ functions:
         - src/business/testing/data2dynamo.js
         - src/business/testing/data.js
         - src/jsUtils/jsUtils.js
+
+  getContactInfo:
+    handler: src/api/getContactInfo.main
+    events:
+      - http:
+          path: api/contactInfo/{id}
+          method: get
+    package:
+      include:
+        - src/api/getContactInfo.js
+        - src/awsUtils/dynamoUtils.js
+        - src/jsUtils/jsUtils.js
+
+  saveContactInfo:
+    handler: src/api/saveContactInfo.main
+    events:
+      - http:
+          path: api/contactInfo/{id}
+          method: post
+    package:
+      include:
+        - src/api/saveContactInfo.js
+        - src/awsUtils/dynamoUtils.js
+        - src/jsUtils/jsUtils.js
+
+  getProduct:
+    handler: src/api/getProduct.main
+    events:
+      - http:
+          path: api/product/{id}
+          method: get
+    package:
+      include:
+        - src/api/getProduct.js
+        - src/awsUtils/dynamoUtils.js
+        - src/jsUtils/jsUtils.js
+    
   
 resources:
   #DynamoDB

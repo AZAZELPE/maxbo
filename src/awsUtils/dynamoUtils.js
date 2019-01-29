@@ -97,6 +97,18 @@ let getContactDataFromCustomer = async (customerId) => {
   return contactInfo;
 }
 
+let saveContactDataFromCustomer = async (customerId,contactInfo) => {
+
+  let customer = await getCustomer(customerId);
+
+  jsUtils.consoleLog('INFO',customer)
+
+  customer['address'] = contactInfo.address;
+  customer['cellphone'] = contactInfo.cellphone;
+
+  return await saveCustomer(customer);
+}
+
 let getCartFromCustomer = async (customerId) => {
 
   let customer = await getCustomer(customerId);
@@ -149,3 +161,4 @@ module.exports.saveProducto2Cart = saveProducto2Cart;
 module.exports.getContactDataFromCustomer = getContactDataFromCustomer;
 module.exports.saveNewOrderFromCart = saveNewOrderFromCart;
 module.exports.getCartFromCustomer = getCartFromCustomer;
+module.exports.saveContactDataFromCustomer = saveContactDataFromCustomer;

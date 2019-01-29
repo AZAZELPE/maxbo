@@ -118,5 +118,33 @@ module.exports.catalogoTest = [
       "tipoData":"producto",
       "ubicacion":"VINOS DE BURDEOS - FRANCIA",
       "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/corazon-loco-rosado_1.jpg"
+    },
+    {
+      "id":"2001",
+      "nombre":"tinto",
+      "tipoData":"filtro",
+      "apunta":"tipo",
+      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/vino_tinto_rioja.jpg"
+    },
+    {
+      "id":"2002",
+      "nombre":"blanco",
+      "tipoData":"filtro",
+      "apunta":"tipo",
+      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/vino_blanco.jpg"
+    },
+    {
+      "id":"2003",
+      "nombre":"rosado",
+      "tipoData":"filtro",
+      "apunta":"tipo",
+      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/rosado.png"
+    },
+    {
+      "id":"2004",
+      "nombre":"espumante",
+      "tipoData":"filtro",
+      "apunta":"tipo",
+      "imageURL":"https://s3.amazonaws.com/maxbo-aws-image/vintage-internal.jpg"
     }
   ]
