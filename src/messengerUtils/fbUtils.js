@@ -69,6 +69,14 @@ let buildPostbackButton = (title, payload) => {
   }
 };
 
+let buildWebButton = (title, weburl) => {
+  return {
+    "type":"web_url",
+    "url":weburl,
+    "title":title
+  }  
+}
+
 let buildSelectButton = (payload) => {
   return {
     "type":"postback",
@@ -159,3 +167,4 @@ module.exports.buildListTemplate = buildListTemplate;
 module.exports.buildTextTemplate = buildTextTemplate;
 module.exports.buildQuickResponseDefined = buildQuickResponseDefined;
 module.exports.buildQuickResponse = buildQuickResponse;
+module.exports.buildWebButton = buildWebButton;

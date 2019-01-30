@@ -105,7 +105,7 @@ let intentComprarCarrito = async (sender_psid) => {
   let datosContacto = await dynamo.getContactDataFromCustomer(sender_psid);
 
   let buttons = []
-  buttons.push(fbUtils.buildPostbackButton("Editar Info",c.INTENT_INFOPROFILE_EDIT));
+  buttons.push(fbUtils.buildWebButton("Editar Info","http://mybo.pe/checkout.html"));
   buttons.push(fbUtils.buildPostbackButton("¡CONFIRMADO!",c.INTENT_COMPRAR_CARRITO_CONFIRMED));
   let titulo = "Datos de contacto y entrega";
   let subtitulo = `Dirección: ${datosContacto.address}\nTeléfono: ${datosContacto.cellphone}`;
@@ -148,7 +148,7 @@ let intentByFilterResponse = async (filter) => {
 
   for(let product of products) {
     let buttons = []
-    buttons.push(fbUtils.buildPostbackButton("Ver Detalle",`PBI_PRO_${product.id}-${c.PRODUCT_ACTION_DETALLE}`));
+    buttons.push(fbUtils.buildWebButton("Ver Detalle",`http://mybo.pe/detalle.html?product_id=${product.id}`));
     buttons.push(fbUtils.buildPostbackButton("Agregar a mi carrito",`PBI_PRO_${product.id}-${c.PRODUCT_ACTION_AGREGAR}`));
     let titulo = product.nombre.toString().toUpperCase();
     let subtitulo = `${product.tipo} - ${product.bodega} - ${product.moneda}${product.precioMinorista}`;
@@ -169,7 +169,9 @@ let intentByProductResponse = async (product, action, sender_psid) => {
 
   if(action == c.PRODUCT_ACTION_DETALLE) {
 
-    let message = `${product.ubicacion}\nEl vino ${product.nombre} es de tipo ${product.tipo} producido en la bodega "${product.bodega}" en el año ${product.anio}. Contiene cepas: ${product.cepas} a un precio de ${product.moneda}${product.precioMinorista}, pero si lleva ${product.umbralMayorista} o más, le sale a un precio de ${product.moneda}${product.precioMayorista} cada uno`;
+    //let message = `${product.ubicacion}\nEl vino ${product.nombre} es de tipo ${product.tipo} producido en la bodega "${product.bodega}" en el año ${product.anio}. Contiene cepas: ${product.cepas} a un precio de ${product.moneda}${product.precioMinorista}, pero si lleva ${product.umbralMayorista} o más, le sale a un precio de ${product.moneda}${product.precioMayorista} cada uno`;
+    //http://mybo.pe/detalle.html
+
     return [fbUtils.buildTextTemplate(message)];
 
   } else if (action == c.PRODUCT_ACTION_AGREGAR) {
