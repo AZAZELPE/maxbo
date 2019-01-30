@@ -105,7 +105,7 @@ let intentComprarCarrito = async (sender_psid) => {
   let datosContacto = await dynamo.getContactDataFromCustomer(sender_psid);
 
   let buttons = []
-  buttons.push(fbUtils.buildWebButton("Editar Info","http://mybo.pe/checkout.html"));
+  buttons.push(fbUtils.buildWebButton("Editar Info","https://mybo.pe/checkout.html"));
   buttons.push(fbUtils.buildPostbackButton("¡CONFIRMADO!",c.INTENT_COMPRAR_CARRITO_CONFIRMED));
   let titulo = "Datos de contacto y entrega";
   let subtitulo = `Dirección: ${datosContacto.address}\nTeléfono: ${datosContacto.cellphone}`;
@@ -148,7 +148,7 @@ let intentByFilterResponse = async (filter) => {
 
   for(let product of products) {
     let buttons = []
-    buttons.push(fbUtils.buildWebButton("Ver Detalle",`http://mybo.pe/detalle.html?product_id=${product.id}`));
+    buttons.push(fbUtils.buildWebButton("Ver Detalle",`https://mybo.pe/detalle.html?product_id=${product.id}`));
     buttons.push(fbUtils.buildPostbackButton("Agregar a mi carrito",`PBI_PRO_${product.id}-${c.PRODUCT_ACTION_AGREGAR}`));
     let titulo = product.nombre.toString().toUpperCase();
     let subtitulo = `${product.tipo} - ${product.bodega} - ${product.moneda}${product.precioMinorista}`;
