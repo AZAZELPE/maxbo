@@ -56,3 +56,10 @@ curl -X POST -H "Content-Type: application/json" -d '{
 }' "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=EAAJ9y8vys9ABABj6s7VBtaMv6DjY47xaQQPqUFUCgbulTBPaZCK0mSOD8afgIFgedGA4Me4KZCcy031DvAkjsq4A44QwXAIlRjpfWh6F5upuT9EMLj0XVoXXNS31xZCsh0ZAR3vqOPKB5mzsfjCan4csq7IGsIL8GMvElga6ZBktn5ZAMcPZBOK"
 
 curl -X GET "https://graph.facebook.com/2044494592303733?fields=first_name,last_name,profile_pic&access_token=EAAJ9y8vys9ABABj6s7VBtaMv6DjY47xaQQPqUFUCgbulTBPaZCK0mSOD8afgIFgedGA4Me4KZCcy031DvAkjsq4A44QwXAIlRjpfWh6F5upuT9EMLj0XVoXXNS31xZCsh0ZAR3vqOPKB5mzsfjCan4csq7IGsIL8GMvElga6ZBktn5ZAMcPZBOK"
+
+
+curl -X POST -H "Content-Type: application/json" -d '{
+  "whitelisted_domains":[
+    "https://mybo.pe"
+  ]
+}' "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=EAAJ9y8vys9ABABj6s7VBtaMv6DjY47xaQQPqUFUCgbulTBPaZCK0mSOD8afgIFgedGA4Me4KZCcy031DvAkjsq4A44QwXAIlRjpfWh6F5upuT9EMLj0XVoXXNS31xZCsh0ZAR3vqOPKB5mzsfjCan4csq7IGsIL8GMvElga6ZBktn5ZAMcPZBOK" 
