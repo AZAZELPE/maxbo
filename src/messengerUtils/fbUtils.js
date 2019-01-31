@@ -73,7 +73,8 @@ let buildWebButton = (title, weburl) => {
   return {
     "type":"web_url",
     "url":weburl,
-    "title":title
+    "title":title,
+    "messenger_extensions": "true"
   }  
 }
 
