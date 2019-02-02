@@ -122,6 +122,19 @@ functions:
         - src/api/getProduct.js
         - src/awsUtils/dynamoUtils.js
         - src/jsUtils/jsUtils.js
+
+  getCart:
+    handler: src/api/getCart.main
+    events:
+      - http:
+          path: api/cart/{id}
+          method: get
+          cors: true
+    package:
+      include:
+        - src/api/getCart.js
+        - src/awsUtils/dynamoUtils.js
+        - src/jsUtils/jsUtils.js
     
   
 resources:
