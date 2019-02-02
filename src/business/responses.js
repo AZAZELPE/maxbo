@@ -94,43 +94,51 @@ let intentVerCarrito = async (cart, sender_psid) => {
 let intentComprarCarrito = async (intentData, sender_psid) => {
 
   let messages = [];
+  let datosContacto = await dynamo.getContactDataFromCustomer(sender_psid);
 
-  if(intentData.questions != undefined || intentData.questions != null) {
+  if(!(datosContacto.email != undefined && datosContacto.email != null && datosContacto.email != "" && datosContacto.cellphone != undefined && datosContacto.cellphone != null && datosContacto.cellphone != "")) {
+    if(intentData.questions != undefined || intentData.questions != null) {
 
-    switch(intentData.questionType) {
-      case c.QUESTIONTYPE_EMAIL:
-        if(intentData.questions == true){
-          messages.push(fbUtils.buildQuickResponseDefined(c.QUICKRESPONSE_EMAIL,"Ingrese su email"));
-        } else {
-          jsUtils.consoleLog('INFO',intentData.data);
-          dynamo.saveContactDataFromCustomer(sender_psid,{"email":intentData.data});
-          messages.push(fbUtils.buildQuickResponseDefined(c.QUICKRESPONSE_PHONE,"Ingrese su teléfono"));  
-        }
-        return messages;
-        break;
-      case c.QUESTIONTYPE_PHONE:
-        if(intentData.questions == true) {
-          messages.push(fbUtils.buildQuickResponseDefined(c.QUICKRESPONSE_PHONE,"Ingrese su teléfono"));  
+      switch(intentData.questionType) {
+        case c.QUESTIONTYPE_EMAIL:
+          if(intentData.questions == true){
+            messages.push(fbUtils.buildQuickResponseDefined(c.QUICKRESPONSE_EMAIL,"Ingrese su email"));
+          } else {
+            jsUtils.consoleLog('INFO',intentData.data);
+            dynamo.saveContactDataFromCustomer(sender_psid,{"email":intentData.data});
+            messages.push(fbUtils.buildQuickResponseDefined(c.QUICKRESPONSE_PHONE,"Ingrese su teléfono"));  
+          }
           return messages;
-        } else {
-          jsUtils.consoleLog('INFO',intentData.data);
-          dynamo.saveContactDataFromCustomer(sender_psid,{"email":intentData.phone});
-          return await verificarDatos(sender_psid);
-        }
-        break;
+          break;
+        case c.QUESTIONTYPE_PHONE:
+          if(intentData.questions == true) {
+            messages.push(fbUtils.buildQuickResponseDefined(c.QUICKRESPONSE_PHONE,"Ingrese su teléfono"));  
+            return messages;
+          } else {
+            jsUtils.consoleLog('INFO',intentData.data);
+            dynamo.saveContactDataFromCustomer(sender_psid,{"email":intentData.phone});
+            return await verificarDatos(null, sender_psid);
+          }
+          break;
+      }
+      
+    } else {
+      return await verificarDatos(datosContacto);
     }
-    
   } else {
-    return await verificarDatos(sender_psid);
+    return await verificarDatos(datosContacto);
   }
 
 };
 
-let verificarDatos = async (sender_psid) => {
+let verificarDatos = async (datosContacto, sender_psid) => {
   let elements = [];
   
+  if(datosContacto == null) {
+    datosContacto = await dynamo.getContactDataFromCustomer(sender_psid);
+  }
   //jsUtils.consoleLog('INFO', product);
-  let datosContacto = await dynamo.getContactDataFromCustomer(sender_psid);
+  
 
   let buttons = []
   buttons.push(fbUtils.buildWebButton("Confirmar Pedido","https://mybo.pe/checkout.html"));
