@@ -116,7 +116,7 @@ let intentComprarCarrito = async (intentData, sender_psid) => {
             return messages;
           } else {
             jsUtils.consoleLog('INFO',intentData.data);
-            dynamo.saveContactDataFromCustomer(sender_psid,{"email":intentData.phone});
+            dynamo.saveContactDataFromCustomer(sender_psid,{"cellphone":intentData.data});
             return await verificarDatos(null, sender_psid);
           }
           break;
