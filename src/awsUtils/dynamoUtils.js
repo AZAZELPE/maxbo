@@ -22,7 +22,8 @@ let lookUpPostbackItem = async (postbackIntent) => {
     TableName: productsTableName
   };
 
-  return await call("get",params);
+  let result = await call("get",params)
+  return result.Item;
 
 };
 

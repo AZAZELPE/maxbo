@@ -1,4 +1,4 @@
-curl -X GET "https://graph.facebook.com/v2.6/me/messenger_profile?fields=whitelisted_domains&access_token=EAAJ9y8vys9ABABj6s7VBtaMv6DjY47xaQQPqUFUCgbulTBPaZCK0mSOD8afgIFgedGA4Me4KZCcy031DvAkjsq4A44QwXAIlRjpfWh6F5upuT9EMLj0XVoXXNS31xZCsh0ZAR3vqOPKB5mzsfjCan4csq7IGsIL8GMvElga6ZBktn5ZAMcPZBOK"
+curl -X GET "https://graph.facebook.com/v2.6/me/messenger_profile?fields=persistent_menu&access_token=EAAJ9y8vys9ABABj6s7VBtaMv6DjY47xaQQPqUFUCgbulTBPaZCK0mSOD8afgIFgedGA4Me4KZCcy031DvAkjsq4A44QwXAIlRjpfWh6F5upuT9EMLj0XVoXXNS31xZCsh0ZAR3vqOPKB5mzsfjCan4csq7IGsIL8GMvElga6ZBktn5ZAMcPZBOK"
 
 
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -31,24 +31,24 @@ curl -X POST -H "Content-Type: application/json" -d '{
             {
               "title":"Separar Carrito",
               "type":"postback",
-              "payload":"CART_CHECKOUT"
+              "payload":"{\"type\":\"INTENT\",\"data\":{\"intent\":\"CART_CHECKOUT\"}}"
             },
             {
               "title":"Ver Carrito",
               "type":"postback",
-              "payload":"CART_VIEW"
+              "payload":"{\"type\":\"INTENT\",\"data\":{\"intent\":\"CART_VIEW\"}}"
             }
           ]
         },
         {
           "type":"postback",
           "title":"Metodos de Pago",
-          "payload":"INFO_PAYMETHODS"
+          "payload":"{\"type\":\"INTENT\",\"data\":{\"intent\":\"INFO_PAYMETHODS\"}}"
         },
         {
           "type":"postback",
           "title":"Ver Catalogo",
-          "payload":"CATALOGUE"
+          "payload":"{\"type\":\"INTENT\",\"data\":{\"intent\":\"CATALOGUE\"}}"
         }
       ]
     }

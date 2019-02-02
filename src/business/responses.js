@@ -1,6 +1,7 @@
 const c = require('./constants');
 const dynamo = require('../awsUtils/dynamoUtils')
 const fbUtils = require('../messengerUtils/fbUtils');
+const pbUtils = require('../messengerUtils/postbackUtils');
 const jsUtils = require('../jsUtils/jsUtils');
 
 let intentEmpezar = async (sender_psid) => {
@@ -11,7 +12,7 @@ let intentEmpezar = async (sender_psid) => {
     "firstName": profile.first_name,
     "lastName": profile.last_name,
     "profileImage": profile.profile_pic,
-    "direccion": 'Av Alameda Sur 917 - Chorrillos',
+    "address": 'Av Alameda Sur 917 - Chorrillos',
     "cellphone": '988663919',
     "signIn": new Date().getTime(),
     "cart": [],
@@ -38,7 +39,8 @@ let intentVerCatalogo = async () => {
   jsUtils.consoleLog('INFO', tiposVino);
 
   for(let tipoVino of tiposVino) {
-    let button = [fbUtils.buildSelectButton(`PBI_FIL_${tipoVino.id}`)];
+    let postback = pbUtils.buildPostbackFilter(1,[{"id":tipoVino.id}]);
+    let button = [fbUtils.buildSelectButton(postback)];
     let titulo = tipoVino.nombre.toString().toUpperCase();
     let subtitulo = "";
     let imageURL = tipoVino.imageURL;
@@ -79,8 +81,8 @@ let intentVerCarrito = async (cart, sender_psid) => {
   }
 
   let buttons = []
-  buttons.push(fbUtils.buildPostbackButton("Separar",c.INTENT_COMPRAR_CARRITO));
-  buttons.push(fbUtils.buildPostbackButton("Seguir viendo",c.INTENT_VER_CATALOGO));
+  buttons.push(fbUtils.buildPostbackButton("Separar",pbUtils.buildPostbackIntent(c.INTENT_COMPRAR_CARRITO)));
+  buttons.push(fbUtils.buildPostbackButton("Seguir viendo",pbUtils.buildPostbackIntent(c.INTENT_VER_CATALOGO)));
 
   let titulo = `Carrito - TOTAL: S/${total}`+"";
   let subtitulo = subs;
@@ -106,7 +108,7 @@ let intentComprarCarrito = async (sender_psid) => {
 
   let buttons = []
   buttons.push(fbUtils.buildWebButton("Editar Info","https://mybo.pe/checkout.html"));
-  buttons.push(fbUtils.buildPostbackButton("¡CONFIRMADO!",c.INTENT_COMPRAR_CARRITO_CONFIRMED));
+  buttons.push(fbUtils.buildPostbackButton("¡CONFIRMADO!",pbUtils.buildPostbackIntent(c.INTENT_COMPRAR_CARRITO_CONFIRMED)));
   let titulo = "Datos de contacto y entrega";
   let subtitulo = `Dirección: ${datosContacto.address}\nTeléfono: ${datosContacto.cellphone}`;
   let imageURL = "https://s3.amazonaws.com/maxbo-aws-image/contactInfo.png";
@@ -132,14 +134,14 @@ let intentComprarCarritoConfirmado = async (customerId) => {
   return messages;
 }
 
-let intentDefaultResponse = () => {
+let intentDefaultResponse = async () => {
 
   let messages = [];
   messages.push(fbUtils.buildTextTemplate("No tenemos ello"));
   return messages;
 };
 
-let intentByFilterResponse = async (filter) => {
+let intentByFilterResponse = async (filter,postback) => {
 
   let products = await dynamo.lookUpByFilter(filter);
   let elements = [];
@@ -148,8 +150,9 @@ let intentByFilterResponse = async (filter) => {
 
   for(let product of products) {
     let buttons = []
+    let postbackBtn = pbUtils.buildPostbackProduct(product.id,c.PRODUCT_ACTION_AGREGAR,null,postback.filters);
     buttons.push(fbUtils.buildWebButton("Ver Detalle",`https://mybo.pe/detalle.html?product_id=${product.id}`));
-    buttons.push(fbUtils.buildPostbackButton("Agregar a mi carrito",`PBI_PRO_${product.id}-${c.PRODUCT_ACTION_AGREGAR}`));
+    buttons.push(fbUtils.buildPostbackButton("Agregar a mi carrito",postbackBtn));
     let titulo = product.nombre.toString().toUpperCase();
     let subtitulo = `${product.tipo} - ${product.bodega} - ${product.moneda}${product.precioMinorista}`;
     let imageURL = product.imageURL;
@@ -165,18 +168,12 @@ let intentByFilterResponse = async (filter) => {
 
 }
 
-let intentByProductResponse = async (product, action, sender_psid) => {
+let intentByProductResponse = async (product, postback, sender_psid) => {
 
-  if(action == c.PRODUCT_ACTION_DETALLE) {
-
-    //let message = `${product.ubicacion}\nEl vino ${product.nombre} es de tipo ${product.tipo} producido en la bodega "${product.bodega}" en el año ${product.anio}. Contiene cepas: ${product.cepas} a un precio de ${product.moneda}${product.precioMinorista}, pero si lleva ${product.umbralMayorista} o más, le sale a un precio de ${product.moneda}${product.precioMayorista} cada uno`;
-    //http://mybo.pe/detalle.html
-
-    return [fbUtils.buildTextTemplate(message)];
-
-  } else if (action == c.PRODUCT_ACTION_AGREGAR) {
+  if (postback.action == c.PRODUCT_ACTION_AGREGAR) {
 
     product['cantidad'] = 1;
+    product['filters'] = postback.filters;
     let cart = await dynamo.saveProducto2Cart(product,sender_psid);
     jsUtils.consoleLog('INFO',cart);
 

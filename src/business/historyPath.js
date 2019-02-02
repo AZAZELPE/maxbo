@@ -8,10 +8,10 @@ const jsUtils = require('../jsUtils/jsUtils');
 // intent: texto
 let evaluatePath = async (type, intent,sender_psid) => {
 
-  jsUtils.consoleLog('INFO',intent.toString().toUpperCase());
+  jsUtils.consoleLog('INFO',intent);
   jsUtils.consoleLog('INFO',type);
 
-  let tipoIntent = await evaluateIntent(type, intent.toString().toUpperCase());
+  let tipoIntent = await evaluateIntent(type, intent);
   
   jsUtils.consoleLog('INFO',tipoIntent);
   let response = await generateRespond(tipoIntent,sender_psid);
@@ -25,9 +25,63 @@ let evaluatePath = async (type, intent,sender_psid) => {
 //un tipo de intent conocido o nulo
 let evaluateIntent = async (type, intent) => {
   
+  //Se verifica si es postback
+  if(type == c.TYPE_POSTBACK) {
+
+    let postback = JSON.parse(intent);
+    jsUtils.consoleLog('INFO',postback);
+
+    switch(postback.type) {
+      case c.POSTBACK_INTENT:                     // CASO INTENT
+        for(let dbintent of c.INTENTS) {
+          for(let value of dbintent.values) {  
+            if(postback.data.intent == value.postback) {
+              return {"tipo":c.TYPE_TEXT_INTENT,
+              "data": dbintent.name,
+              "postback": postback.data}
+            }
+          }
+        }
+        break;
+      case c.POSTBACK_FILTER:                     // CASO FILTRO
+        let filter = await dynamo.lookUpPostbackItem(postback.data.filters[0].id);
+        if(filter) {
+          return {"tipo":c.TYPE_FILTER_INTENT,
+                  "data": filter,
+                  "postback": postback.data}
+        }
+        break;
+      case c.POSTBACK_PRODUCT:                     // CASO PRODUCT
+        let product = await dynamo.lookUpPostbackItem(postback.data.id);
+        if(product) {
+          return {"tipo":c.TYPE_PRODUCT_INTENT,
+                  "data": product,
+                  "postback": postback.data}
+        }
+        break;
+    }
+
+  } else if (type == c.TYPE_MESSAGE) {   // CASO TEXTO
+    for(let dbintent of c.INTENTS) {
+      for(let value of dbintent.values) {
+        if(intent.toString().toUpperCase() == value.text) {
+          return {"tipo":c.TYPE_TEXT_INTENT,
+          "data": dbintent.name,
+          "postback":""};
+        }
+      }
+    }
+  } 
+    
+  return {"tipo":c.TYPE_TEXT_INTENT,
+  "data": c.INTENT_DEFAULT_RESPONSE,
+  "postback": ""};
+
   //Primero se evalua si es un intent q esta en db por tipo de posback en boton
   //si no lo es se recorre todos los intents conocidos
-  if(intent.toString().split("_")[0] == 'PBI' && type == c.TYPE_POSTBACK)  {// PBI = POSTBACK ITEM -- FIL = filtro -- PRO = producto
+  /*if(intent.toString().split("_")[0] == 'PBI' && type == c.TYPE_POSTBACK)  {// PBI = POSTBACK ITEM -- FIL = filtro -- PRO = producto
+    
+    
     
     if(intent.toString().split("_")[1] == 'FIL') { // Si se selecciona un filtro
       
@@ -66,20 +120,20 @@ let evaluateIntent = async (type, intent) => {
 
       }
     }
-  }
+  } */
   
-  return c.INTENT_DEFAULT_RESPONSE;
+  
 };
 
 let generateRespond = async (tipoIntent,sender_psid) => {
 
   if(tipoIntent.tipo == c.TYPE_FILTER_INTENT) {
 
-    return await response.intentByFilterResponse(tipoIntent.data);
+    return await response.intentByFilterResponse(tipoIntent.data,tipoIntent.postback);
 
   } else if(tipoIntent.tipo == c.TYPE_PRODUCT_INTENT) {
   
-    return await response.intentByProductResponse(tipoIntent.data,tipoIntent.action,sender_psid)
+    return await response.intentByProductResponse(tipoIntent.data,tipoIntent.postback,sender_psid)
 
   } else if(tipoIntent.tipo == c.TYPE_TEXT_INTENT) {
 
@@ -104,6 +158,9 @@ let generateRespond = async (tipoIntent,sender_psid) => {
 
       case c.INTENT_INFOPROFILE_EDIT:
         return await response.intentEditProfileInfo();
+
+      case c.INTENT_DEFAULT_RESPONSE:
+        return await response.intentDefaultResponse();
 
       default:
         return await response.intentDefaultResponse();

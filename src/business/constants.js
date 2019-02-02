@@ -1,3 +1,11 @@
+// Constantes para el POSTBACK
+module.exports.POSTBACK_FILTER = 'FILTER';
+module.exports.POSTBACK_INTENT = 'INTENT';
+module.exports.POSTBACK_PRODUCT = 'PRODUCT';
+
+
+
+
 module.exports.TYPE_MESSAGE = 'MESSAGE';
 module.exports.TYPE_POSTBACK = 'POSTBACK';
 module.exports.TYPE_FILTER_INTENT = 'FILTER_INTENT';
@@ -14,8 +22,8 @@ module.exports.INTENT_DEFAULT_RESPONSE = 'DEFAULT_RESPONSE';
 module.exports.INTENT_INFOPROFILE_EDIT = 'INFOPROFILE_EDIT';
 
 module.exports.PRODUCT_ACTION_AGREGAR = 'ADD';
-module.exports.PRODUCT_ACTION_DETALLE = 'DET';
 module.exports.PRODUCT_ACTION_REMOVER = 'DEL';
+module.exports.PRODUCT_ACTION_UPDATE = 'UPDATE';
 
 module.exports.QUICKRESPONSE_PHONE = 'user_phone_number';
 module.exports.QUICKRESPONSE_LOCATION = 'location';

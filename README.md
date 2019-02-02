@@ -52,3 +52,47 @@ FIL_2532301_2532303 => Filtrado por categoria (Tinto) y zona (Francia)
 SEL_2532343 => Seleccionado el producto Pontificis blanco
 
 
+### POSTBACK
+** Definicion ** 
+Todo método postback es aquel que se retorna al presionar algun boton o funcionalidad de un tipo de mensaje.
+Para todo este metodo tendrá un estandar de comunicación utilizando un JSON
+
+'''
+{
+  "type": <FILTER | PRODUCT | INTENT>,
+  "data": MYDATA,
+}
+'''
+
+MYDATA es un json que variará según el tipo de intent.
+
+MYDATA - como FILTER
+'''
+{
+  "qty": <Cantidad de filtros>,
+  "filters": [
+    {"id":<Id del filtro>},
+    ...
+  ]
+}
+'''
+
+MYDATA - como PRODUCT
+'''
+{
+  "id": <El id del producto>,
+  "action": <ADD | DEL | UPDATE>,
+  "quantity": <Cantidad -> Solo con UPDATE>,
+  "filters": [
+    {"id":<Id del filtro>},
+    ...
+  ]
+}
+'''
+
+MYDATA - como INTENT
+'''
+{
+  "intent": <El intent>
+}
+'''
