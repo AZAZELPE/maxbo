@@ -10,4 +10,14 @@ let consoleLog = (type, data) => {
     }
 }
 
+function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
 module.exports.consoleLog = consoleLog;
+module.exports.IsJsonString = IsJsonString;

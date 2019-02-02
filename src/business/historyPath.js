@@ -151,7 +151,7 @@ let generateRespond = async (tipoIntent,sender_psid) => {
         return await response.intentVerCarrito(undefined,sender_psid);
 
       case c.INTENT_COMPRAR_CARRITO:
-        return await response.intentComprarCarrito(sender_psid);
+        return await response.intentComprarCarrito(tipoIntent.postback, sender_psid);
 
       case c.INTENT_COMPRAR_CARRITO_CONFIRMED:
         return await response.intentComprarCarritoConfirmado(sender_psid);

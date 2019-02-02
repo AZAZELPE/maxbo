@@ -145,17 +145,32 @@ let buildQuickResponseDefined = (type, text) => {
   ]};
 };
 
-let buildQuickResponse = (text, buttonTitle, payload) => {
-  return {"text": text,
-  "quick_replies":[
-    {
+let buildQuickResponseElement = (buttonTitle, payload) => {
+  return {
       "content_type":"text",
       "title": buttonTitle,
       "payload": payload
-    }
-  ]};
+    };
 };
 
+let buildQuickResponseTemplate = (text, elements) => {
+  return {"text": text,
+  "quick_replies": elements
+  };
+};
+
+let buildButtonTemplate = (text, buttons) => {
+  return {
+    "attachment":{
+      "type":"template",
+      "payload":{
+        "template_type":"button",
+        "text":text,
+        "buttons": buttons
+      }
+    }
+  }
+};
 
 module.exports.getProfileFromFB = getProfileFromFB;
 module.exports.sendMessage2FB = sendMessage2FB;
@@ -167,5 +182,7 @@ module.exports.buildSelectButton = buildSelectButton;
 module.exports.buildListTemplate = buildListTemplate;
 module.exports.buildTextTemplate = buildTextTemplate;
 module.exports.buildQuickResponseDefined = buildQuickResponseDefined;
-module.exports.buildQuickResponse = buildQuickResponse;
 module.exports.buildWebButton = buildWebButton;
+module.exports.buildQuickResponseElement = buildQuickResponseElement;
+module.exports.buildQuickResponseTemplate = buildQuickResponseTemplate;
+module.exports.buildButtonTemplate = buildButtonTemplate;

@@ -3,7 +3,8 @@ module.exports.POSTBACK_FILTER = 'FILTER';
 module.exports.POSTBACK_INTENT = 'INTENT';
 module.exports.POSTBACK_PRODUCT = 'PRODUCT';
 
-
+module.exports.QUESTIONTYPE_EMAIL = 'QUESTION_EMAIL';
+module.exports.QUESTIONTYPE_PHONE = 'QUESTION_PHONE';
 
 
 module.exports.TYPE_MESSAGE = 'MESSAGE';

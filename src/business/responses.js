@@ -40,16 +40,12 @@ let intentVerCatalogo = async () => {
 
   for(let tipoVino of tiposVino) {
     let postback = pbUtils.buildPostbackFilter(1,[{"id":tipoVino.id}]);
-    let button = [fbUtils.buildSelectButton(postback)];
     let titulo = tipoVino.nombre.toString().toUpperCase();
-    let subtitulo = "";
-    let imageURL = tipoVino.imageURL;
-    elements.push(fbUtils.buildElementWithImage(titulo,subtitulo,button,imageURL));
+    elements.push(fbUtils.buildQuickResponseElement(titulo,postback));
   }
 
   let messages = [];
-  messages.push(fbUtils.buildTextTemplate('¿Qué tipo de Vino le gustaría?'));
-  messages.push(fbUtils.buildGenericTemplate(elements));
+  messages.push(fbUtils.buildQuickResponseTemplate('¿Qué tipo de Vino le gustaría?',elements));
 
   jsUtils.consoleLog('INFO', messages);
 
@@ -68,61 +64,86 @@ let intentVerCarrito = async (cart, sender_psid) => {
   if(cart === undefined) {
     cart = await dynamo.getCartFromCustomer(sender_psid);
   }
-
-  let elements = [];
   
   //jsUtils.consoleLog('INFO', product);
-  let subs = "";
+  let text = "";
   let total = 0;
+  let checkEmoji = '\u{2705}';
+  let cartEmoji = '\u{1F6D2}';
 
   for(let p of cart) {
     total += p.cantidad*p.precioMinorista;
-    subs += `${p.cantidad} ${p.nombre} - ${p.tipo} (${p.moneda}${p.precioMinorista})\n`;
+    text += `${checkEmoji} ${p.cantidad} ${p.nombre} - ${p.tipo} (${p.moneda}${p.precioMinorista} c/u)\n`;
   }
 
+  text = `${cartEmoji} CARRITO - TOTAL: S/${total}\n${text}`;
+
   let buttons = []
-  buttons.push(fbUtils.buildPostbackButton("Separar",pbUtils.buildPostbackIntent(c.INTENT_COMPRAR_CARRITO)));
+  buttons.push(fbUtils.buildPostbackButton("Separar",pbUtils.buildPostbackIntent(c.INTENT_COMPRAR_CARRITO,true,c.QUESTIONTYPE_EMAIL)));
   buttons.push(fbUtils.buildPostbackButton("Seguir viendo",pbUtils.buildPostbackIntent(c.INTENT_VER_CATALOGO)));
 
-  let titulo = `Carrito - TOTAL: S/${total}`+"";
-  let subtitulo = subs;
-  let imageURL = "https://s3.amazonaws.com/maxbo-aws-image/wineCart.png";
-  elements.push(fbUtils.buildElementWithImage(titulo,subtitulo,buttons,imageURL));
-
   let messages = []
-  messages.push(fbUtils.buildGenericTemplate(elements));
+  messages.push(fbUtils.buildButtonTemplate(text,buttons));
+
 
   jsUtils.consoleLog('INFO', messages);
 
   return messages;
 };
 
-let intentComprarCarrito = async (sender_psid) => {
+let intentComprarCarrito = async (intentData, sender_psid) => {
 
-  let customer = dynamo
-  
+  let messages = [];
+
+  if(intentData.questions != undefined || intentData.questions != null) {
+
+    switch(intentData.questionType) {
+      case c.QUESTIONTYPE_EMAIL:
+        if(intentData.questions == true){
+          messages.push(fbUtils.buildQuickResponseDefined(c.QUICKRESPONSE_EMAIL,"Ingrese su email"));
+        } else {
+          jsUtils.consoleLog('INFO',intentData.data);
+          dynamo.saveContactDataFromCustomer(sender_psid,{"email":intentData.data});
+          messages.push(fbUtils.buildQuickResponseDefined(c.QUICKRESPONSE_PHONE,"Ingrese su teléfono"));  
+        }
+        return messages;
+        break;
+      case c.QUESTIONTYPE_PHONE:
+        if(intentData.questions == true) {
+          messages.push(fbUtils.buildQuickResponseDefined(c.QUICKRESPONSE_PHONE,"Ingrese su teléfono"));  
+          return messages;
+        } else {
+          jsUtils.consoleLog('INFO',intentData.data);
+          dynamo.saveContactDataFromCustomer(sender_psid,{"email":intentData.phone});
+          return await verificarDatos(sender_psid);
+        }
+        break;
+    }
+    
+  } else {
+    return await verificarDatos(sender_psid);
+  }
+
+};
+
+let verificarDatos = async (sender_psid) => {
   let elements = [];
   
   //jsUtils.consoleLog('INFO', product);
   let datosContacto = await dynamo.getContactDataFromCustomer(sender_psid);
 
   let buttons = []
-  buttons.push(fbUtils.buildWebButton("Editar Info","https://mybo.pe/checkout.html"));
-  buttons.push(fbUtils.buildPostbackButton("¡CONFIRMADO!",pbUtils.buildPostbackIntent(c.INTENT_COMPRAR_CARRITO_CONFIRMED)));
-  let titulo = "Datos de contacto y entrega";
-  let subtitulo = `Dirección: ${datosContacto.address}\nTeléfono: ${datosContacto.cellphone}`;
-  let imageURL = "https://s3.amazonaws.com/maxbo-aws-image/contactInfo.png";
-  elements.push(fbUtils.buildElementWithImage(titulo,subtitulo,buttons,imageURL));
+  buttons.push(fbUtils.buildWebButton("Confirmar Pedido","https://mybo.pe/checkout.html"));
+  buttons.push(fbUtils.buildPostbackButton("Ver Carrito",pbUtils.buildPostbackIntent(c.INTENT_VER_CARRITO)));
+  buttons.push(fbUtils.buildPostbackButton("Confirmar Pedido 2",pbUtils.buildPostbackIntent(c.INTENT_COMPRAR_CARRITO_CONFIRMED)));
+  let text = `TUS DATOS:\nNombre:${datosContacto.nombre}\nTeléfono: ${datosContacto.cellphone}\nEmail: ${datosContacto.email}`;
 
-  let messages = []
-  messages.push(fbUtils.buildTextTemplate("Porfavor confirmar la informacion de entrega y contacto"));
-  messages.push(fbUtils.buildGenericTemplate(elements));
+  let messages = [];
+  messages.push(fbUtils.buildButtonTemplate(text,buttons));
 
   jsUtils.consoleLog('INFO', messages);
-
   return messages;
-
-};
+}
 
 let intentComprarCarritoConfirmado = async (customerId) => {
 
@@ -150,7 +171,7 @@ let intentByFilterResponse = async (filter,postback) => {
 
   for(let product of products) {
     let buttons = []
-    let postbackBtn = pbUtils.buildPostbackProduct(product.id,c.PRODUCT_ACTION_AGREGAR,null,postback.filters);
+    let postbackBtn = pbUtils.buildPostbackProduct(product.id,c.PRODUCT_ACTION_UPDATE,null,postback.filters);
     buttons.push(fbUtils.buildWebButton("Ver Detalle",`https://mybo.pe/detalle.html?product_id=${product.id}`));
     buttons.push(fbUtils.buildPostbackButton("Agregar a mi carrito",postbackBtn));
     let titulo = product.nombre.toString().toUpperCase();
@@ -172,12 +193,27 @@ let intentByProductResponse = async (product, postback, sender_psid) => {
 
   if (postback.action == c.PRODUCT_ACTION_AGREGAR) {
 
-    product['cantidad'] = 1;
+    product['cantidad'] = postback.quantity;
     product['filters'] = postback.filters;
     let cart = await dynamo.saveProducto2Cart(product,sender_psid);
     jsUtils.consoleLog('INFO',cart);
 
     return intentVerCarrito(cart);
+
+  } else if (postback.action == c.PRODUCT_ACTION_UPDATE) {
+
+    let elements = [];
+
+    for(let i=0;i<5;i++){
+      let quickPostback = pbUtils.buildPostbackProduct(product.id,c.PRODUCT_ACTION_AGREGAR,i+1,postback.filters);
+      let title = i+1;
+      elements.push(fbUtils.buildQuickResponseElement(title,quickPostback));
+    }
+
+    let messages = [];
+    messages.push(fbUtils.buildQuickResponseTemplate('Seleccione la cantidad',elements));
+
+    return messages;
 
   }
 

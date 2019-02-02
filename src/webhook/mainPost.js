@@ -2,6 +2,7 @@
 
 const jsUtils = require('../jsUtils/jsUtils');
 const fbUtils = require('../messengerUtils/fbUtils');
+const pbUtils = require('../messengerUtils/postbackUtils');
 //const testing = require('../business/testing/foolingAround');
 const bussines = require('../business/historyPath');
 const c = require('../business/constants');
@@ -36,7 +37,23 @@ module.exports.main = async (event, context) => {
       // Check if the event is a message or postback and
       // pass the event to the appropriate handler function
       if (webhook_event.message) {
-        messages = await bussines.evaluatePath(c.TYPE_MESSAGE, webhook_event.message.text,sender_psid);
+        if(webhook_event.message.quick_reply) {
+          let data = webhook_event.message.quick_reply.payload;
+          if(jsUtils.IsJsonString(data)) {
+            messages = await bussines.evaluatePath(c.TYPE_POSTBACK, data,sender_psid);
+          } else {
+            let postback = "";
+            if(data.indexOf('+') > -1){
+              postback = pbUtils.buildPostbackIntent(c.INTENT_COMPRAR_CARRITO,false,c.QUESTIONTYPE_PHONE,data);
+              messages = await bussines.evaluatePath(c.TYPE_POSTBACK, postback,sender_psid);
+            } else if(data.indexOf('@') > -1){
+              postback = pbUtils.buildPostbackIntent(c.INTENT_COMPRAR_CARRITO,false,c.QUESTIONTYPE_EMAIL,data);
+              messages = await bussines.evaluatePath(c.TYPE_POSTBACK, postback,sender_psid);
+            }
+          }
+        } else {
+          messages = await bussines.evaluatePath(c.TYPE_MESSAGE, webhook_event.message.text,sender_psid);
+        }
       } 
       else if (webhook_event.postback) {
         messages = await bussines.evaluatePath(c.TYPE_POSTBACK, webhook_event.postback.payload,sender_psid);

@@ -93,6 +93,9 @@ MYDATA - como PRODUCT
 MYDATA - como INTENT
 '''
 {
-  "intent": <El intent>
+  "intent": <El intent>,
+  "questions": <True | False>, 
+  "questionType": <Data dependiendo del intent>,
+  "data": < mydata >
 }
 '''

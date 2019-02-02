@@ -91,8 +91,10 @@ let getContactDataFromCustomer = async (customerId) => {
   jsUtils.consoleLog('INFO',customer)
 
   let contactInfo = {
+    "nombre": `${customer.firstName} ${customer.lastName}`,
     "address": customer.address,
-    "cellphone": customer.cellphone
+    "cellphone": customer.cellphone,
+    "email": customer.email
   }
 
   return contactInfo;
@@ -104,8 +106,9 @@ let saveContactDataFromCustomer = async (customerId,contactInfo) => {
 
   jsUtils.consoleLog('INFO',customer)
 
-  customer['address'] = contactInfo.address;
-  customer['cellphone'] = contactInfo.cellphone;
+  if(contactInfo.address != undefined && contactInfo.address != null && contactInfo.address != "") customer['address'] = contactInfo.address;
+  if(contactInfo.cellphone != undefined && contactInfo.cellphone != null && contactInfo.cellphone != "") customer['cellphone'] = contactInfo.cellphone;
+  if(contactInfo.email != undefined && contactInfo.email != null && contactInfo.email != "") customer['email'] = contactInfo.email;
 
   return await saveCustomer(customer);
 }

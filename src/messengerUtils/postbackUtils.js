@@ -13,11 +13,14 @@ let buildPostbackFilter = (qty,filters) => {
 };
 
 
-let buildPostbackIntent = (intent) => {
+let buildPostbackIntent = (intent,questions,questionType,data) => {
   let postback = {
     "type": c.POSTBACK_INTENT,
     "data": {
-      "intent": intent
+      "intent": intent,
+      "questions": questions,
+      "questionType": questionType,
+      "data":data
     }
   };
   return JSON.stringify(postback);
