@@ -1,0 +1,12 @@
+apiPagesProductsGetOne:
+  handler: src/api/pages/products/getOne.main
+  events:
+    - http:
+        path: api/pages/{pageId}/products/{productId}
+        method: get
+        cors: true
+  package:
+    include:
+      - src/api/pages/products/getOne.js
+      - src/awsUtils/dynamoUtils.js
+      - src/jsUtils/jsUtils.js

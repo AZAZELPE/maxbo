@@ -48,36 +48,6 @@ package:
     - ./**
 
 functions:
-  mainPost:
-    handler: src/webhook/mainPost.main
-    events:
-      - http:
-          path: webhook
-          method: post
-    package:
-      include: # Specify the directories and files which should be included in the deployment package for this specific function.
-        - src/webhook/mainPost.js
-        - src/messengerUtils/node_modules/**
-        - src/jsUtils/jsUtils.js
-        - src/messengerUtils/fbUtils.js
-        - src/messengerUtils/postbackUtils.js
-        - src/business/testing/foolingAround.js
-        - src/business/constants.js
-        - src/business/historyPath.js
-        - src/business/responses.js
-        - src/awsUtils/dynamoUtils.js
-        
-  mainGet:
-    handler: src/webhook/mainGet.main
-    events:
-      - http:
-          path: webhook
-          method: get
-    package:
-      include: # Specify the directories and files which should be included in the deployment package for this specific function.
-        - src/webhook/mainGet.js
-        - src/jsUtils/jsUtils.js
-
   data2dynamo:
     handler: src/business/testing/data2dynamo.main
     package:
@@ -86,58 +56,20 @@ functions:
         - src/business/testing/data.js
         - src/jsUtils/jsUtils.js
 
-  getContactInfo:
-    handler: src/api/getContactInfo.main
-    events:
-      - http:
-          path: api/contactInfo/{id}
-          method: get
-          cors: true
-    package:
-      include:
-        - src/api/getContactInfo.js
-        - src/awsUtils/dynamoUtils.js
-        - src/jsUtils/jsUtils.js
+  #API:
+  #Webhook
+  apiWebhookPost: ${file(src/api/webhook/functions.yml):apiWebhookPost}
+  apiWebhookGet: ${file(src/api/webhook/functions.yml):apiWebhookGet}
+  #---------------------------------------------------------------------------------------------------------
+  #Pages -> Products
+  apiPagesProductsGetOne: ${file(src/api/pages/products/functions.yml):apiPagesProductsGetOne}
+  #Pages -> Customers
+  apiPagesCustomersGetOne: ${file(src/api/pages/customers/functions.yml):apiPagesCustomersGetOne}
+  apiPagesCustomersPut: ${file(src/api/pages/customers/functions.yml):apiPagesCustomersPut}
+  #Pages -> Customers -> Carts
+  apiPagesCustomersCartsGet: ${file(src/api/pages/customers/carts/functions.yml):apiPagesCustomersCartsGet}  
+  #---------------------------------------------------------------------------------------------------------
 
-  saveContactInfo:
-    handler: src/api/saveContactInfo.main
-    events:
-      - http:
-          path: api/contactInfo/{id}
-          method: post
-          cors: true
-    package:
-      include:
-        - src/api/saveContactInfo.js
-        - src/awsUtils/dynamoUtils.js
-        - src/jsUtils/jsUtils.js
-
-  getProduct:
-    handler: src/api/getProduct.main
-    events:
-      - http:
-          path: api/product/{id}
-          method: get
-          cors: true
-    package:
-      include:
-        - src/api/getProduct.js
-        - src/awsUtils/dynamoUtils.js
-        - src/jsUtils/jsUtils.js
-
-  getCart:
-    handler: src/api/getCart.main
-    events:
-      - http:
-          path: api/cart/{id}
-          method: get
-          cors: true
-    package:
-      include:
-        - src/api/getCart.js
-        - src/awsUtils/dynamoUtils.js
-        - src/jsUtils/jsUtils.js
-    
   
 resources:
   #DynamoDB

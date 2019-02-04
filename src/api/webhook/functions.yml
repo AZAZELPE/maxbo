@@ -1,0 +1,29 @@
+apiWebhookPost:
+  handler: src/api/webhook/post.main
+  events:
+    - http:
+        path: api/webhook
+        method: post
+  package:
+    include: # Specify the directories and files which should be included in the deployment package for this specific function.
+      - src/api/webhook/post.js
+      - src/messengerUtils/node_modules/**
+      - src/jsUtils/jsUtils.js
+      - src/messengerUtils/fbUtils.js
+      - src/messengerUtils/postbackUtils.js
+      - src/business/testing/foolingAround.js
+      - src/business/constants.js
+      - src/business/historyPath.js
+      - src/business/responses.js
+      - src/awsUtils/dynamoUtils.js
+      
+apiWebhookGet:
+  handler: src/api/webhook/get.main
+  events:
+    - http:
+        path: api/webhook
+        method: get
+  package:
+    include: # Specify the directories and files which should be included in the deployment package for this specific function.
+      - src/api/webhook/get.js
+      - src/jsUtils/jsUtils.js

@@ -1,0 +1,12 @@
+apiPagesCustomersCartsGet:
+  handler: src/api/pages/customers/carts/get.main
+  events:
+    - http:
+        path: api/pages/{pageId}/customers/{customerId}/carts
+        method: get
+        cors: true
+  package:
+    include:
+      - src/api/pages/customers/carts/get.js
+      - src/awsUtils/dynamoUtils.js
+      - src/jsUtils/jsUtils.js

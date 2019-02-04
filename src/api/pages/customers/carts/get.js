@@ -1,22 +1,23 @@
-const dynamo = require('../awsUtils/dynamoUtils');
+const dynamo = require('../../../../awsUtils/dynamoUtils');
 
 module.exports.main = async (event, context) => {
 
-  let productId = event.pathParameters.id;
+  const customerId = event.pathParameters.customerId;
   
-  let mybody = await dynamo.lookUpPostbackItem(productId);
-  let product = mybody.Item;
+  const cart = await dynamo.getCartFromCustomer(customerId);
+  
+  console.log(cart);
 
-  let response = {
+  const response = {
     statusCode: 200,
-    "headers": {
+    headers: {
       "X-Requested-With": '*',
       "Access-Control-Allow-Headers": 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-requested-with',
       "Access-Control-Allow-Origin": '*',
       "Access-Control-Allow-Methods": 'POST,GET,OPTIONS',
       "Access-Control-Allow-Credentials" : true
     },
-    body: JSON.stringify(product)
+    body: JSON.stringify(cart)
   }
 
   return response;

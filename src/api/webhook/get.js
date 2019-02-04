@@ -1,5 +1,5 @@
 'use strict';
-const jsUtils = require('../jsUtils/jsUtils');
+const jsUtils = require('../../jsUtils/jsUtils');
 
 module.exports.main = async (event, context) => {
   

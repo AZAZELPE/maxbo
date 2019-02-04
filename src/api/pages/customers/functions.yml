@@ -1,0 +1,27 @@
+apiPagesCustomersGetOne:
+  handler: src/api/pages/customers/getOne.main
+  events:
+    - http:
+        path: api/pages/{pageId}/customer/{customerId}
+        method: get
+        cors: true
+  package:
+    include:
+      - src/api/pages/customers/getOne.js
+      - src/awsUtils/dynamoUtils.js
+      - src/jsUtils/jsUtils.js
+
+apiPagesCustomersPut:
+  handler: src/api/pages/customers/put.main
+  events:
+    - http:
+        path: api/pages/{pageId}/customer/{customerId}
+        method: put
+        cors: true
+  package:
+    include:
+      - src/api/pages/customers/put.js
+      - src/awsUtils/dynamoUtils.js
+      - src/jsUtils/jsUtils.js
+  
+    

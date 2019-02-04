@@ -1,11 +1,11 @@
 'use strict';
 
-const jsUtils = require('../jsUtils/jsUtils');
-const fbUtils = require('../messengerUtils/fbUtils');
-const pbUtils = require('../messengerUtils/postbackUtils');
+const jsUtils = require('../../jsUtils/jsUtils');
+const fbUtils = require('../../messengerUtils/fbUtils');
+const pbUtils = require('../../messengerUtils/postbackUtils');
 //const testing = require('../business/testing/foolingAround');
-const bussines = require('../business/historyPath');
-const c = require('../business/constants');
+const bussines = require('../../business/historyPath');
+const c = require('../../business/constants');
 
 /*let handleMessage = async (sender_psid, received_message) => {
   let message;

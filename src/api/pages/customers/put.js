@@ -1,16 +1,16 @@
-const dynamo = require('../awsUtils/dynamoUtils');
+const dynamo = require('../../../awsUtils/dynamoUtils');
 
 module.exports.main = async (event, context) => {
 
-  let customerId = event.pathParameters.id;
-  let contactInfo = JSON.parse(event.body);
+  const customerId = event.pathParameters.customerId;
+  const newCustomerData = JSON.parse(event.body);
 
-  await dynamo.saveContactDataFromCustomer(customerId,contactInfo);
-  let mybody = await dynamo.getContactDataFromCustomer(customerId);
+  await dynamo.saveContactDataFromCustomer(customerId,newCustomerData);
+  const customerData = await dynamo.getContactDataFromCustomer(customerId);
 
-  console.log(mybody);
+  console.log(customerData);
   
-  let response = {
+  const response = {
     statusCode: 200,
     "headers": {
       "X-Requested-With": '*',
@@ -19,7 +19,7 @@ module.exports.main = async (event, context) => {
       "Access-Control-Allow-Methods": 'POST,GET,OPTIONS',
       "Access-Control-Allow-Credentials" : true
     },
-    body: JSON.stringify(mybody)
+    body: JSON.stringify(customerData)
   }
 
   return response;
