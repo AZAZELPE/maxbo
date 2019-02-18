@@ -1,12 +1,29 @@
 const jsUtils = require('../jsUtils/jsUtils');
 const AWS = require('aws-sdk');
+const uuidv1 = require('uuid/v1');
+
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 const productsTableName = process.env.productsTableName;
 const customersTableName = process.env.customersTableName;
+const storyPathTableName = process.env.storyPathTableName;
 
 // GENERICS
 let call = (action, params) => {
   return dynamoDb[action](params).promise();
+}
+let generateUUID = () => {
+  return uuidv1();
+};
+
+//TABLE: STORY PATH
+let saveMessage = async (messageBloq) => {
+
+  const params = {
+    TableName: storyPathTableName,
+    Item: messageBloq
+  };
+
+  return await call("put",params);
 }
 
 
@@ -166,3 +183,6 @@ module.exports.getContactDataFromCustomer = getContactDataFromCustomer;
 module.exports.saveNewOrderFromCart = saveNewOrderFromCart;
 module.exports.getCartFromCustomer = getCartFromCustomer;
 module.exports.saveContactDataFromCustomer = saveContactDataFromCustomer;
+module.exports.saveMessage = saveMessage;
+module.exports.generateUUID = generateUUID;
+
